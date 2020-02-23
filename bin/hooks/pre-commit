@@ -7,7 +7,7 @@ $handler = new Phpple\GitWatcher\HookHandler(SITE_ROOT);
 $ret = $handler->preCommit();
 if (!$ret) {
     echo '提交失败!'.PHP_EOL;
+    exit(1);
 } else {
     echo '提交成功'.PHP_EOL;
 }
-exit(1);

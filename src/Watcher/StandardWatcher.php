@@ -66,7 +66,7 @@ class StandardWatcher implements WatcherInterface
             }
         }
         if (!isset($options['standard'])) {
-            $options['standard'] = self::DEFAULT_STANDARD;
+            $options['standard'] = '--standard='.self::DEFAULT_STANDARD;
         }
 
         if (!$phpcsPath) {

@@ -38,7 +38,8 @@ class PhpSyntaxWatcher implements WatcherInterface
         $ext = $this->conf['extension'] ?? self::DEFAULT_EXT;
         $dest = $this->conf['dir'] ?? self::DEFAULT_DIR;
         $exclude = $this->conf['exclude'] ?? '';
-        $cmd = sprintf('find %s -name "%s" -type f %s',
+        $cmd = sprintf(
+            'find %s -name "%s" -type f %s',
             $dest,
             $ext,
             $exclude ? ' | grep -v "' . $exclude . '"' : ''

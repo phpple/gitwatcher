@@ -23,19 +23,19 @@ class WatcherLoaderTest extends TestCase
 
     public function testPreCommit()
     {
-        $handler = new HookHandler(SITE_ROOT.'/src/', __DIR__.'/files/rule.json');
+        $handler = new HookHandler(SITE_ROOT . '/src/', __DIR__ . '/files/rule.json');
         $this->assertTrue($handler->preCommit());
     }
 
     public function testPhpSyntax()
     {
         $loader = HookHandler::initWatcher(HookHandler::PHP_SYNTAX, [
-            'dir' => __DIR__.'/files/',
+            'dir' => __DIR__ . '/files/',
         ]);
         $this->assertFalse($loader->check());
 
         $loader = HookHandler::initWatcher(HookHandler::PHP_SYNTAX, [
-            'dir' => __DIR__.'/files/',
+            'dir' => __DIR__ . '/files/',
             'exclude' => 'badsyntax'
         ]);
         $this->assertTrue($loader->check());
@@ -43,15 +43,15 @@ class WatcherLoaderTest extends TestCase
 
     public function testStandard()
     {
-        chdir(__DIR__.'/files/');
+        chdir(__DIR__ . '/files/');
         $loader = HookHandler::initWatcher(HookHandler::STANDARD, [
-            'phpcs' => SITE_ROOT.'/vendor/bin/phpcs',
+            'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
             'standard' => 'PSR2',
         ]);
         $this->assertFalse($loader->check());
 
         $loader = HookHandler::initWatcher(HookHandler::STANDARD, [
-            'phpcs' => SITE_ROOT.'/vendor/bin/phpcs',
+            'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
             'standard' => 'PSR2',
             'ignore' => 'badstandard.php'
         ]);

@@ -52,14 +52,13 @@ class HookHandler
      * 载入loader
      * @param string $name
      * @return WatcherInterface
-     * @throws \Exception
      */
     public static function initWatcher(string $name, array $conf)
     {
         $className = __NAMESPACE__ . "\\Watcher\\" . str_replace('_', '', ucwords($name, '_')) . 'Watcher';
         $watcher = new $className();
         if (!($watcher instanceof WatcherInterface)) {
-            throw new \Exception('watcher must be instance of WatcherInterface');
+            return null;
         }
 
         $watcher->init($conf);
@@ -80,6 +79,10 @@ class HookHandler
         foreach ($confs as $name => $conf) {
             chdir($this->dir);
             $watcher = self::initWatcher($name, $conf);
+            if (!$watcher) {
+                ConsoleUtil::stderr('watcher not found:'. $name);
+                continue;
+            }
             ConsoleUtil::stdout('-------watcher:' . $name . ' start ------');
             $ret = $watcher->check();
             ConsoleUtil::stdout('-------watcher:' . $name . ' end ------');
