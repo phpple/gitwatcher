@@ -33,4 +33,14 @@ class WatcherLoaderTest extends TestCase
         $loader = HookHandler::initWatcher(HookHandler::PHP_SYNTAX, []);
         $this->assertFalse($loader->check());
     }
+
+    public function testStandard()
+    {
+        chdir(__DIR__.'/files/');
+        $loder = HookHandler::initWatcher(HookHandler::STANDARD, [
+            'phpcs' => SITE_ROOT.'/vendor/bin/phpcs',
+            'standard' => 'PSR2',
+        ]);
+        $this->assertFalse($loder->check());
+    }
 }

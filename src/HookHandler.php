@@ -15,14 +15,20 @@ use Phpple\GitWatcher\Watcher\WatcherInterface;
 
 class HookHandler
 {
-    const WATCHER_FORBIDDEN_MERGE = 'forbidden_merge';
+    const FORBIDDEN_MERGE = 'forbidden_merge';
     const GIT_VERSION = 'git_version';
     const PHP_SYNTAX = 'php_syntax';
+    const STANDARD = 'standard';
 
     const WATCHER_LIST = [
-        self::GIT_VERSION,
-        self::PHP_SYNTAX,
-        self::WATCHER_FORBIDDEN_MERGE,
+        self::GIT_VERSION => [
+            'version' => '2.0.0'
+        ],
+        self::PHP_SYNTAX => [],
+        self::FORBIDDEN_MERGE => [],
+        self::STANDARD => [
+            'standard' => 'PSR2',
+        ],
     ];
 
     /**
@@ -51,9 +57,9 @@ class HookHandler
      */
     public static function preCommit(string $dir): bool
     {
-        foreach (self::WATCHER_LIST as $name) {
+        foreach (self::WATCHER_LIST as $name => $conf) {
             chdir($dir);
-            $watcher = self::initWatcher($name, []);
+            $watcher = self::initWatcher($name, $conf);
             ConsoleUtil::stdout('-------watcher:' . $name . ' start ------');
             $ret = $watcher->check();
             ConsoleUtil::stdout('-------watcher:' . $name . ' end ------');

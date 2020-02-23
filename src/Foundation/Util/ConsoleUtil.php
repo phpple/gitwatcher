@@ -28,6 +28,9 @@ class ConsoleUtil
      */
     public static function stdout($msg)
     {
+        if (is_array($msg)) {
+            $msg = implode(PHP_EOL, $msg);
+        }
         if (!is_scalar($msg)) {
             $msg = var_export($msg, true);
         }

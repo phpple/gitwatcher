@@ -12,7 +12,7 @@ namespace Phpple\GitWatcher\Watcher;
 
 class GitVersionWatcher implements WatcherInterface
 {
-    const MIN_VERSION = '2.0.0';
+    private $minVersion;
     /**
      * 配置项
      * @param array $conf
@@ -20,7 +20,7 @@ class GitVersionWatcher implements WatcherInterface
      */
     public function init(array $conf)
     {
-        // TODO: Implement init() method.
+        $this->minVersion = $conf['version'];
     }
 
     /**
@@ -30,6 +30,6 @@ class GitVersionWatcher implements WatcherInterface
     public function check(): bool
     {
         $version = system('git version|awk "{print \$3}"');
-        return version_compare($version, self::MIN_VERSION) >= 0;
+        return version_compare($version, $this->minVersion) >= 0;
     }
 }
