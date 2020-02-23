@@ -1,0 +1,14 @@
+#! /usr/bin/php
+<?php
+use Phpple\GitWatcher\Foundation\Watcher\WatcherLoader;
+
+define('SITE_ROOT', dirname(dirname(__DIR__)));
+require SITE_ROOT.'/vendor/autoload.php';
+
+$ret = Phpple\GitWatcher\Watcher\WatcherLoader::precommit();
+if (!$ret) {
+    echo '提交失败!'.PHP_EOL;
+} else {
+    echo '提交成功'.PHP_EOL;
+}
+exit(1);
