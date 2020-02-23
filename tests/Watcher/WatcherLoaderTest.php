@@ -30,9 +30,15 @@ class WatcherLoaderTest extends TestCase
     public function testPhpSyntax()
     {
         $loader = HookHandler::initWatcher(HookHandler::PHP_SYNTAX, [
-            'dir' => __DIR__.'/files/'
+            'dir' => __DIR__.'/files/',
         ]);
         $this->assertFalse($loader->check());
+
+        $loader = HookHandler::initWatcher(HookHandler::PHP_SYNTAX, [
+            'dir' => __DIR__.'/files/',
+            'exclude' => 'badsyntax'
+        ]);
+        $this->assertTrue($loader->check());
     }
 
     public function testStandard()
