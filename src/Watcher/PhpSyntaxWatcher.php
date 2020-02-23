@@ -32,17 +32,18 @@ class PhpSyntaxWatcher implements WatcherInterface
      */
     public function check(): bool
     {
-        exec('find . -name *.php -type f', $files, $code);
+        exec('find ./ -name *.php -type f', $files, $code);
+        $passed = true;
         if ($code == 0) {
             foreach($files as $file) {
                 ConsoleUtil::stdout('check file '.$file);
                 exec(sprintf('php -nl %s', $file), $outputs, $code);
                 if ($code !== 0) {
                     ConsoleUtil::stderr($outputs);
-                    return false;
+                    $passed = false;
                 }
             }
         }
-        return true;
+        return $passed;
     }
 }

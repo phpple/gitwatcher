@@ -4,15 +4,16 @@
  * @author: ronnie
  * @since: 2020/2/23 12:27 上午
  * @copyright: 2020@100tal.com
- * @filesource: WatcherLoader.php
+ * @filesource: HookHandler.phpp
  */
 
-namespace Phpple\GitWatcher\Watcher;
+namespace Phpple\GitWatcher;
 
 
 use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
+use Phpple\GitWatcher\Watcher\WatcherInterface;
 
-class WatcherLoader
+class HookHandler
 {
     const WATCHER_FORBIDDEN_MERGE = 'forbidden_merge';
     const GIT_VERSION = 'git_version';
@@ -32,7 +33,7 @@ class WatcherLoader
      */
     public static function initWatcher(string $name, array $conf)
     {
-        $className = __NAMESPACE__ . "\\" . str_replace('_', '', ucwords($name, '_')) . 'Watcher';
+        $className = __NAMESPACE__ . "\\Watcher\\" . str_replace('_', '', ucwords($name, '_')) . 'Watcher';
         $watcher = new $className();
         if (!($watcher instanceof WatcherInterface)) {
             throw new \Exception('watcher must be instance of WatcherInterface');
@@ -44,17 +45,18 @@ class WatcherLoader
 
     /**
      * pre-commit对应的处理
+     * @param string $dir
      * @return bool
      * @throws \Exception
      */
-    public static function preCommit():bool
+    public static function preCommit(string $dir): bool
     {
         foreach (self::WATCHER_LIST as $name) {
-            chdir(SITE_ROOT);
+            chdir($dir);
             $watcher = self::initWatcher($name, []);
-            ConsoleUtil::stdout('-------watcher:'.$name.' start ------');
+            ConsoleUtil::stdout('-------watcher:' . $name . ' start ------');
             $ret = $watcher->check();
-            ConsoleUtil::stdout('-------watcher:'.$name.' end ------');
+            ConsoleUtil::stdout('-------watcher:' . $name . ' end ------');
             if ($ret === false) {
                 return false;
             }

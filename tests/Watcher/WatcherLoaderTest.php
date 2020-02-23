@@ -10,27 +10,27 @@
 namespace Phpple\GitWatcher\Tests\Watcher;
 
 
-use Phpple\GitWatcher\Watcher\WatcherLoader;
+use Phpple\GitWatcher\HookHandler;
 use PHPUnit\Framework\TestCase;
 
 class WatcherLoaderTest extends TestCase
 {
     public function testGitVersionLoader()
     {
-        $loader = WatcherLoader::initWatcher(WatcherLoader::GIT_VERSION, []);
+        $loader = HookHandler::initWatcher(HookHandler::GIT_VERSION, []);
         $this->assertTrue($loader->check());
     }
 
     public function testPreCommit()
     {
-        $ret = WatcherLoader::preCommit();
+        $ret = HookHandler::preCommit(SITE_ROOT.'/src/');
         $this->assertTrue($ret);
     }
 
     public function testPhpSyntax()
     {
         chdir(__DIR__.'/files/');
-        $loader = WatcherLoader::initWatcher(WatcherLoader::PHP_SYNTAX, []);
+        $loader = HookHandler::initWatcher(HookHandler::PHP_SYNTAX, []);
         $this->assertFalse($loader->check());
     }
 }
