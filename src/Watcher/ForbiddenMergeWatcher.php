@@ -4,13 +4,13 @@
  * @author: ronnie
  * @since: 2020/2/22 9:51 上午
  * @copyright: 2020@100tal.com
- * @filesource: ForbiddenMerge.php
+ * @filesource: ForbiddenMergeWatcher.phpher.php
  */
 
 namespace Phpple\GitWatcher\Watcher;
 
 
-class ForbiddenMerge implements WatcherInterface
+class ForbiddenMergeWatcher implements WatcherInterface
 {
 
     /**
@@ -29,6 +29,6 @@ class ForbiddenMerge implements WatcherInterface
      */
     public function check(): bool
     {
-        // TODO: Implement check() method.
+        return true;
     }
 }

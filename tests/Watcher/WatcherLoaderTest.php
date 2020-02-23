@@ -20,4 +20,17 @@ class WatcherLoaderTest extends TestCase
         $loader = WatcherLoader::initWatcher(WatcherLoader::GIT_VERSION, []);
         $this->assertTrue($loader->check());
     }
+
+    public function testPreCommit()
+    {
+        $ret = WatcherLoader::preCommit();
+        $this->assertTrue($ret);
+    }
+
+    public function testPhpSyntax()
+    {
+        chdir(__DIR__.'/files/');
+        $loader = WatcherLoader::initWatcher(WatcherLoader::PHP_SYNTAX, []);
+        $this->assertFalse($loader->check());
+    }
 }

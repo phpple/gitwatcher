@@ -31,14 +31,17 @@ class ConsoleUtil
         if (!is_scalar($msg)) {
             $msg = var_export($msg, true);
         }
-        fwrite(STDOUT, $msg);
+        fwrite(STDOUT, $msg.PHP_EOL);
     }
 
     public static function stderr($msg)
     {
+        if (is_array($msg)) {
+            $msg = implode(PHP_EOL, $msg);
+        }
         if (!is_scalar($msg)) {
             $msg = var_export($msg, true);
         }
-        fwrite(STDERR, $msg);
+        fwrite(STDERR, $msg.PHP_EOL);
     }
 }

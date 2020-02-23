@@ -10,13 +10,17 @@
 namespace Phpple\GitWatcher\Watcher;
 
 
+use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
+
 class WatcherLoader
 {
     const WATCHER_FORBIDDEN_MERGE = 'forbidden_merge';
     const GIT_VERSION = 'git_version';
+    const PHP_SYNTAX = 'php_syntax';
 
     const WATCHER_LIST = [
         self::GIT_VERSION,
+        self::PHP_SYNTAX,
         self::WATCHER_FORBIDDEN_MERGE,
     ];
 
@@ -45,12 +49,14 @@ class WatcherLoader
      */
     public static function preCommit():bool
     {
-        foreach (self::WATCHER_LIST as $name => $required) {
+        foreach (self::WATCHER_LIST as $name) {
             chdir(SITE_ROOT);
             $watcher = self::initWatcher($name, []);
+            ConsoleUtil::stdout('-------watcher:'.$name.' start ------');
             if (!$watcher->check()) {
                 return false;
             }
+            ConsoleUtil::stdout('-------watcher:'.$name.' end ------');
         }
         return true;
     }

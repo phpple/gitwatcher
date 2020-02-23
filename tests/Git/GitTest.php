@@ -10,7 +10,6 @@
 namespace Phpple\GitWatcher\Watcher\Tests\Git;
 
 use Phpple\GitWatcher\Foundation\Git\GitUtil;
-use Phpple\GitWatcher\Watcher\WatcherLoader;
 use PHPUnit\Framework\TestCase;
 
 class GitTest extends TestCase
