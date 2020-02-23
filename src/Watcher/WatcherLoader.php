@@ -53,10 +53,11 @@ class WatcherLoader
             chdir(SITE_ROOT);
             $watcher = self::initWatcher($name, []);
             ConsoleUtil::stdout('-------watcher:'.$name.' start ------');
-            if (!$watcher->check()) {
+            $ret = $watcher->check();
+            ConsoleUtil::stdout('-------watcher:'.$name.' end ------');
+            if ($ret === false) {
                 return false;
             }
-            ConsoleUtil::stdout('-------watcher:'.$name.' end ------');
         }
         return true;
     }
