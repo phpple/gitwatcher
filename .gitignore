@@ -1,3 +1,5 @@
 vendor/
 *.lock
 .idea/
+coverage/
+example/

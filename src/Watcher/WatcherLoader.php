@@ -26,9 +26,9 @@ class WatcherLoader
      * @return WatcherInterface
      * @throws \Exception
      */
-    public function initWatcher(string $name, array $conf)
+    public static function initWatcher(string $name, array $conf)
     {
-        $className = __NAMESPACE__ . "\\" . ucwords($name) . 'Watcher';
+        $className = __NAMESPACE__ . "\\" . str_replace('_', '', ucwords($name, '_')) . 'Watcher';
         $watcher = new $className();
         if (!($watcher instanceof WatcherInterface)) {
             throw new \Exception('watcher must be instance of WatcherInterface');

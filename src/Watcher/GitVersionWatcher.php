@@ -29,7 +29,7 @@ class GitVersionWatcher implements WatcherInterface
      */
     public function check(): bool
     {
-        $version = system('git version|awk "{print $3}"');
+        $version = system('git version|awk "{print \$3}"');
         return version_compare($version, self::MIN_VERSION) >= 0;
     }
 }

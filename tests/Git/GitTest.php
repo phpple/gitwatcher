@@ -28,6 +28,5 @@ class GitTest extends TestCase
         $expectBranch = 'refs/heads/foo';
         $this->assertEquals($expectBranch, GitUtil::getStandardBranch($branch));
         $this->assertEquals($expectBranch, GitUtil::getStandardBranch($expectBranch));
-        WatcherLoader::
     }
 }
