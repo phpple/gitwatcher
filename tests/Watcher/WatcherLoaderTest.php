@@ -23,24 +23,32 @@ class WatcherLoaderTest extends TestCase
 
     public function testPreCommit()
     {
-        $ret = HookHandler::preCommit(SITE_ROOT.'/src/');
-        $this->assertTrue($ret);
+        $handler = new HookHandler(SITE_ROOT.'/src/', __DIR__.'/files/rule.json');
+        $this->assertTrue($handler->preCommit());
     }
 
     public function testPhpSyntax()
     {
-        chdir(__DIR__.'/files/');
-        $loader = HookHandler::initWatcher(HookHandler::PHP_SYNTAX, []);
+        $loader = HookHandler::initWatcher(HookHandler::PHP_SYNTAX, [
+            'dir' => __DIR__.'/files/'
+        ]);
         $this->assertFalse($loader->check());
     }
 
     public function testStandard()
     {
         chdir(__DIR__.'/files/');
-        $loder = HookHandler::initWatcher(HookHandler::STANDARD, [
+        $loader = HookHandler::initWatcher(HookHandler::STANDARD, [
             'phpcs' => SITE_ROOT.'/vendor/bin/phpcs',
             'standard' => 'PSR2',
         ]);
-        $this->assertFalse($loder->check());
+        $this->assertFalse($loader->check());
+
+        $loader = HookHandler::initWatcher(HookHandler::STANDARD, [
+            'phpcs' => SITE_ROOT.'/vendor/bin/phpcs',
+            'standard' => 'PSR2',
+            'ignore' => 'badstandard.php'
+        ]);
+        $this->assertTrue($loader->check());
     }
 }

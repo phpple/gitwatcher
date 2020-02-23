@@ -9,12 +9,29 @@
 
 namespace Phpple\GitWatcher\Watcher;
 
-
 use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
 
 class StandardWatcher implements WatcherInterface
 {
     private $conf = [];
+    const DEFAULT_STANDARD = 'PSR2';
+    const DEFAULT_PHPCS_PATH = './vendor/bin/phpcs';
+    const CONF_KEYS = [
+        'cache',
+        'tab-width',
+        'report',
+        'report-file',
+        'basepath',
+        'bootstrap',
+        'standard',
+        'sniffs',
+        'exclude',
+        'encoding',
+        'extensions',
+        'ignore',
+        'file-list',
+        'filter',
+    ];
 
     /**
      * 配置项
@@ -32,17 +49,40 @@ class StandardWatcher implements WatcherInterface
      */
     public function check(): bool
     {
-        $phpcsPath = $this->conf['phpcs'] ?? realpath('vendor/bin/phpcs');
-        $standard = $this->conf['standard'] ?? 'PSR2';
-        if (!is_executable($phpcsPath)) {
-            ConsoleUtil::stderr('phpcs not found:'.$phpcsPath);
+        $phpcsPath = $this->conf['phpcs'] ?? '';
+        if ($phpcsPath) {
+            if (substr($phpcsPath, 0, 1) != '/' && defined('SITE_ROOT')) {
+                $phpcsPath = SITE_ROOT . '/' . $phpcsPath;
+            }
+        } else {
+            $phpcsPath = self::DEFAULT_PHPCS_PATH;
+        }
+        $phpcsPath = realpath($phpcsPath);
+
+        $options = [];
+        foreach (self::CONF_KEYS as $key) {
+            if (isset($this->conf[$key])) {
+                $options[$key] = sprintf('--%s="%s"', $key, $this->conf[$key]);
+            }
+        }
+        if (!isset($options['standard'])) {
+            $options['standard'] = self::DEFAULT_STANDARD;
+        }
+
+        if (!$phpcsPath) {
+            ConsoleUtil::stderr('phpcs not found:' . $phpcsPath);
             return false;
         }
-        $cmd = sprintf('%s --standard=%s --colors ./', $phpcsPath, $standard);
-        ConsoleUtil::stdout('cmd:'. $cmd);
+        $cmd = sprintf(
+            '%s %s --colors ./',
+            $phpcsPath,
+            empty($options) ? '' : implode(' ', $options)
+        );
+        ConsoleUtil::stdout('cmd:' . $cmd);
         system($cmd, $code);
         if ($code !== 0) {
             return false;
         }
+        return true;
     }
 }

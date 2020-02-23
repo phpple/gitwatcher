@@ -9,16 +9,20 @@
 
 namespace Phpple\GitWatcher;
 
-
 use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
 use Phpple\GitWatcher\Watcher\WatcherInterface;
 
 class HookHandler
 {
+    private $dir;
+    private $confs = null;
+
     const FORBIDDEN_MERGE = 'forbidden_merge';
     const GIT_VERSION = 'git_version';
     const PHP_SYNTAX = 'php_syntax';
     const STANDARD = 'standard';
+
+    const DEFAULT_CONF_FILE = 'gitwatcher.json';
 
     const WATCHER_LIST = [
         self::GIT_VERSION => [
@@ -30,6 +34,19 @@ class HookHandler
             'standard' => 'PSR2',
         ],
     ];
+
+    public function __construct(string $dir, string $confFile = '')
+    {
+        $this->dir = $dir;
+
+        if (!$confFile) {
+            $confFile = $dir.'/'.self::DEFAULT_CONF_FILE;
+        }
+        if (is_file($confFile)) {
+            $content = file_get_contents($confFile);
+            $this->confs = json_decode($content, true);
+        }
+    }
 
     /**
      * 载入loader
@@ -51,14 +68,17 @@ class HookHandler
 
     /**
      * pre-commit对应的处理
-     * @param string $dir
      * @return bool
      * @throws \Exception
      */
-    public static function preCommit(string $dir): bool
+    public function preCommit(): bool
     {
-        foreach (self::WATCHER_LIST as $name => $conf) {
-            chdir($dir);
+        $confs = self::WATCHER_LIST;
+        if ($this->confs !== null) {
+            $confs = $this->confs;
+        }
+        foreach ($confs as $name => $conf) {
+            chdir($this->dir);
             $watcher = self::initWatcher($name, $conf);
             ConsoleUtil::stdout('-------watcher:' . $name . ' start ------');
             $ret = $watcher->check();

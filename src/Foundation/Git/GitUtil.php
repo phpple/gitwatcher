@@ -9,7 +9,6 @@
 
 namespace Phpple\GitWatcher\Foundation\Git;
 
-
 class GitUtil
 {
     const BRANCH_PREFIX = 'refs/heads/';

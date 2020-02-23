@@ -1,0 +1,8 @@
+{
+  "git_version": {},
+  "php_syntax": {},
+  "standard": {
+    "phpcs": "vendor/bin/phpcs",
+    "standard":"psr2"
+  }
+}

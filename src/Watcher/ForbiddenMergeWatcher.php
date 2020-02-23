@@ -9,10 +9,8 @@
 
 namespace Phpple\GitWatcher\Watcher;
 
-
 class ForbiddenMergeWatcher implements WatcherInterface
 {
-
     /**
      * 配置项
      * @param array $conf

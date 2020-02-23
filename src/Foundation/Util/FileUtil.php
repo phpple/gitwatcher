@@ -9,7 +9,6 @@
 
 namespace Phpple\GitWatcher\Foundation\Util;
 
-
 class FileUtil
 {
     /**

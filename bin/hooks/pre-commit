@@ -3,7 +3,7 @@
 define('SITE_ROOT', dirname(dirname(__DIR__)));
 require SITE_ROOT.'/vendor/autoload.php';
 
-$ret = Phpple\GitWatcher\HookHandler::preCommit(SITE_ROOT);
+$handler = new Phpple\GitWatcher\HookHandler(SITE_ROOT);
 if (!$ret) {
     echo '提交失败!'.PHP_EOL;
 } else {

@@ -9,7 +9,6 @@
 
 namespace Phpple\GitWatcher\Foundation\Git;
 
-
 class HookCommits
 {
     private $commits = [];

@@ -9,7 +9,6 @@
 
 namespace Phpple\GitWatcher\Watcher;
 
-
 interface WatcherInterface
 {
     /**

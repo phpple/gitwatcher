@@ -9,10 +9,8 @@
 
 namespace Phpple\GitWatcher\Foundation\Util;
 
-
 class ConsoleUtil
 {
-
     /**
      * 读取标准输入
      * @return string

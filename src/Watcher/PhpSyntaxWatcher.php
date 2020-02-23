@@ -9,12 +9,15 @@
 
 namespace Phpple\GitWatcher\Watcher;
 
-
 use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
 use SebastianBergmann\Environment\Console;
 
 class PhpSyntaxWatcher implements WatcherInterface
 {
+    private $conf = [];
+
+    const DEFAULT_EXT = '*.php';
+    const DEFAULT_DIR = './';
 
     /**
      * 配置项
@@ -23,7 +26,7 @@ class PhpSyntaxWatcher implements WatcherInterface
      */
     public function init(array $conf)
     {
-        // TODO: Implement init() method.
+        $this->conf = $conf;
     }
 
     /**
@@ -32,11 +35,15 @@ class PhpSyntaxWatcher implements WatcherInterface
      */
     public function check(): bool
     {
-        exec('find ./ -name *.php -type f', $files, $code);
+        $ext = $this->conf['extension'] ?? self::DEFAULT_EXT;
+        $dest = $this->conf['dir'] ?? self::DEFAULT_DIR;
+        $cmd = sprintf('find %s -name "%s" -type f', $dest, $ext);
+        ConsoleUtil::stdout($cmd);
+        exec($cmd, $files, $code);
         $passed = true;
         if ($code == 0) {
-            foreach($files as $file) {
-                ConsoleUtil::stdout('check file '.$file);
+            foreach ($files as $file) {
+                ConsoleUtil::stdout('check file ' . $file);
                 exec(sprintf('php -nl %s', $file), $outputs, $code);
                 if ($code !== 0) {
                     ConsoleUtil::stderr($outputs);
