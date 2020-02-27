@@ -101,7 +101,7 @@ class StandardWatcher implements WatcherInterface
         );
         ConsoleUtil::stdout('cmd:' . $cmd);
         system($cmd, $code);
-        if ($code !== 0) {
+        if ($code === 2) {
             return false;
         }
         return true;
