@@ -3,6 +3,7 @@
   "php_syntax": {},
   "standard": {
     "phpcs": "vendor/bin/phpcs",
-    "standard":"psr2"
+    "standard":"psr2",
+    "s": null
   }
 }

@@ -16,7 +16,7 @@ class StandardWatcher implements WatcherInterface
     private $conf = [];
     const DEFAULT_STANDARD = 'PSR2';
     const DEFAULT_PHPCS_PATH = './vendor/bin/phpcs';
-    const CONF_KEYS = [
+    const KV_CONF_KEYS = [
         'cache',
         'tab-width',
         'report',
@@ -31,6 +31,14 @@ class StandardWatcher implements WatcherInterface
         'ignore',
         'file-list',
         'filter',
+    ];
+    const K_CONF_KEYS = [
+        's',
+        'colors',
+        'no-colors',
+        'v',
+        'vv',
+        'vvv',
     ];
 
     /**
@@ -60,23 +68,36 @@ class StandardWatcher implements WatcherInterface
         $phpcsPath = realpath($phpcsPath);
 
         $options = [];
-        foreach (self::CONF_KEYS as $key) {
+        foreach (self::KV_CONF_KEYS as $key) {
             if (isset($this->conf[$key])) {
                 $options[$key] = sprintf('--%s="%s"', $key, $this->conf[$key]);
             }
         }
-        if (!isset($options['standard'])) {
-            $options['standard'] = '--standard='.self::DEFAULT_STANDARD;
+        foreach (self::K_CONF_KEYS as $key) {
+            if (key_exists($key, $this->conf)) {
+                if (strlen($key) == 1 || $key == 'vv' || $key == 'vvv') {
+                    $options[$key] = sprintf('-%s', $key);
+                } else {
+                    $options[$key] = sprintf('--%s', $key);
+                }
+            }
         }
+        if (!isset($options['standard'])) {
+            $options['standard'] = '--standard=' . self::DEFAULT_STANDARD;
+        }
+
+        $targetDir = $this->conf['target'] ?? './';
+        $targetDir = realpath($targetDir);
 
         if (!$phpcsPath) {
             ConsoleUtil::stderr('phpcs not found:' . $phpcsPath);
             return false;
         }
         $cmd = sprintf(
-            '%s %s --colors ./',
+            '%s %s --colors %s',
             $phpcsPath,
-            empty($options) ? '' : implode(' ', $options)
+            empty($options) ? '' : implode(' ', $options),
+            $targetDir
         );
         ConsoleUtil::stdout('cmd:' . $cmd);
         system($cmd, $code);

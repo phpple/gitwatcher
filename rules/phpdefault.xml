@@ -1,0 +1,254 @@
+<?xml version="1.0"?>
+<ruleset name="firegit-php">
+    <description>Php Style Check Standard</description>
+
+    <rule ref="Generic.PHP.Syntax"></rule>
+    <rule ref="Squiz.Operators.ValidLogicalOperators"></rule>
+    <rule ref="PSR2">
+        <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+<!--        <exclude name="Squiz.Classes.ValidClassName.NotCamelCaps"/>-->
+<!--        <exclude name="PSR1.Classes.ClassDeclaration.MissingNamespace"/>-->
+<!--        <exclude name="PSR2.Namespaces"/>-->
+<!--        <exclude name="Generic.Files.LineLength.TooLong"/>-->
+<!--        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>-->
+<!--        <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps"/>-->
+<!--        <exclude name="PSR2.Files.EndFileNewline.NoneFound"/>-->
+<!--        <exclude name="PSR1.Files.SideEffects.FoundWithSymbols"/>-->
+    </rule>
+    <rule ref="Generic.PHP.ForbiddenFunctions">
+        <properties>
+            <property name="forbiddenFunctions" type="array" value="eval=>null,print_r=>null,delete=>unset,create_function=>null,var_dump=>null,die=>null,extract=>null" />
+        </properties>
+    </rule>
+
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <message>每个类必须定义一个命名空间</message>
+    </rule>
+    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
+        <message>类名“%1$s”不符合PascalCase格式</message>
+    </rule>
+    <rule ref="Squiz.Scope.StaticThisUsage.Found">
+        <message>在静态方法中使用$this将导致运行时错误</message>
+    </rule>
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod.Found">
+        <message>检测到无用的覆盖（override）方法</message>
+    </rule>
+    <rule ref="PSR2.Files.EndFileNewline.NoneFound">
+        <message>文件末尾期待有1行，只找到0行。</message>
+    </rule>
+
+    <rule ref="Generic.PHP.ForbiddenFunctions.Found">
+        <message>禁止使用函数“%1$s”</message>
+    </rule>
+    <rule ref="Generic.PHP.ForbiddenFunctions.FoundWithAlternative">
+        <message>禁止使用函数“%1$s”，请使用“%2$s”替代</message>
+    </rule>
+
+    <rule ref="PSR2.Namespaces.NamespaceDeclaration.BlankLineAfter">
+        <message>命名空间生命后必须有且仅有1行空白行</message>
+    </rule>
+    <rule ref="PSR2.Classes.ClassDeclaration.OpenBraceNewLine">
+        <message>类的开始花括号必须在类定义的下一行</message>
+    </rule>
+    <rule ref="PSR2.ControlStructures.SwitchDeclaration.TerminatingComment">
+        <message>如果存在非空的 case 直穿语句，主体里必须有类似 // no break 的注释。</message>
+    </rule>
+    <rule ref="PSR2.Classes.PropertyDeclaration.VarUsed">
+        <message>类的属性请勿使用var来定义</message>
+    </rule>
+    <rule ref="PSR2.Classes.ClassDeclaration.OpenBraceNewLin">
+        <message>类的开始花括号({)必须另起一行</message>
+    </rule>
+    <rule ref="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody">
+        <message>类的结束花括号(})必须写在函数主体后的下一行</message>
+    </rule>
+    <rule ref="Generic.PHP.LowerCaseKeyword.Found">
+        <message>PHP所有关键字必须全部小写。期待“%1$s”，实际上是“%2$s”</message>
+    </rule>
+    <rule ref="Generic.Files.LineEndings.InvalidEOLChar">
+        <message>行结束符不合法。期待“%1$s”，实际上是“%2$s”</message>
+    </rule>
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent.TabsUsed">
+        <message>代码必须使用4个空格符的缩进，一定不能用tab键 。</message>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EndLine">
+        <message>行尾不能有空白</message>
+    </rule>
+    <rule ref="Squiz.Scope.MethodScope.Missing">
+        <message>方法“%1$s”必须添加访问修饰符</message>
+    </rule>
+    <rule ref="PSR2.Classes.PropertyDeclaration.ScopeMissing">
+        <message>属性“%1$s”必须添加访问修饰符</message>
+    </rule>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.NoSpaceBeforeArg">
+        <message>逗号和参数之间必须有一个空格</message>
+    </rule>
+    <rule ref="Generic.Functions.FunctionCallArgumentSpacing.NoSpaceAfterComma">
+        <message>调用方法时逗号后面需要有一个空格</message>
+    </rule>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceBeforeEquals">
+        <message>参数“%1$s”和等号之间的空格不正确；期待1个，实际上是“%2$s”</message>
+    </rule>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceAfterDefault">
+        <message>等号和“%1$s”的默认值之间的空格不正确；期待1个，实际上是“%2$s”</message>
+    </rule>
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent.NonIndentTabsUsed">
+        <message>必须用空格来对齐，而不是Tab</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword">
+        <message>在foreach关键词后期待有一个空格，实际找到%1$d个</message>
+    </rule>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpaceBeforeComma">
+        <message>参数“%1$s”和逗号之间不能有空格；实际上找到%2$d个</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace">
+        <message>结束花括号(})后期待有1个空格，实际上找到%1$d个</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ControlSignature.SpaceAfterCloseParenthesis">
+        <message>右括号())后期待有1个空格，实际上找到%1$d个</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.NoSpaceBeforeArrow">
+        <message>在"=>"之前期望有1个空格，实际找到0个</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.NoSpaceAfterArrow">
+        <message>在"=>"之后期望有1个空格，实际找到0个</message>
+    </rule>
+
+    <rule ref="Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen">
+        <message>控制体开始时不能有空行</message>
+    </rule>
+    <rule ref="Generic.ControlStructures.InlineControlStructure.NotAllowed">
+        <message>控制体结构不允许在同一行</message>
+    </rule>
+    <rule ref="Generic.WhiteSpace.ScopeIndent.Incorrect">
+        <message>行缩进错误；期待至少%1$d个，实际只有%2$d个</message>
+    </rule>
+    <rule ref="PSR2.ControlStructures.SwitchDeclaration.BreakIndent">
+        <message>结束表达式必须和和case在同一级别</message>
+    </rule>
+    <rule ref="Generic.WhiteSpace.ScopeIndent.IncorrectExact">
+        <message>行缩进错误；期待%1$d个，实际只有%2$d个</message>
+    </rule>
+    <rule ref="Generic.Functions.FunctionCallArgumentSpacing.SpaceBeforeComma">
+        <message>调用函数时逗号前不能有空格</message>
+    </rule>
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine">
+        <message>方法的开始花括号({)必须新起一行</message>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore">
+        <message>方法的结束花括号(})必须独占一行</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.SpaceAfterOpen">
+        <message>在foreach的左括号后面不能有空格</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.SpaceBeforeCloseBrace">
+        <message>在foreach的右括号前面不能有空格</message>
+    </rule>
+    <rule ref="Generic.Formatting.DisallowMultipleStatements.SameLine">
+        <message>每一个PHP表达式需要独占一行</message>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose">
+        <message>控制结构体最后不能有空行</message>
+    </rule>
+    <rule ref="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace">
+        <message>在左括号之后不能有空格，实际找到%1$d个</message>
+    </rule>
+    <rule ref="PSR2.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace">
+        <message>在右括号之前不能有空格，实际找到%1$d个</message>
+    </rule>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingBeforeClose">
+        <message>在参数“%2$s”和右括号之间不能有空格，实际找到%1$d个</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.SpaceBeforeClose">
+        <message>在foreach循环体的右括号前不能有空格</message>
+    </rule>
+    <rule ref="PSR2.Methods.MethodDeclaration.StaticBeforeVisibility">
+        <message>静态声明之前必须增加访问修饰符</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace">
+        <message>左括号后需要新起一行</message>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore">
+        <message>右括号必须独占一行</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForEachLoopDeclaration.SpacingAfterAs">
+        <message>“as”后期待有1个空白，实际找到%1$d个</message>
+    </rule>
+    <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
+        <message>“else if”不鼓励使用，使用“elseif”替代</message>
+    </rule>
+    <rule ref="Generic.Functions.FunctionCallArgumentSpacing.TooMuchSpaceAfterComma">
+        <message>调用函数时逗号后面期待1个空格，实际找到%1$d个</message>
+    </rule>
+
+    <rule ref="PSR2.Methods.FunctionCallSignature.SpaceBeforeOpenBracket">
+        <message>调用方法时左括号之前不允许有空格</message>
+    </rule>
+    <rule ref="PSR2.Methods.FunctionCallSignature.SpaceAfterOpenBracket">
+        <message>调用方法时左括号之后不允许有空格</message>
+    </rule>
+    <rule ref="PSR2.Methods.FunctionCallSignature.SpaceBeforeCloseBracket">
+        <message>右括号后不能有空格，实际找到%1$d个</message>
+    </rule>
+    <rule ref="PSR2.Classes.ClassDeclaration.SpaceBeforeBrace">
+        <message>右括号后不能有空格，实际找到%1$d个</message>
+    </rule>
+
+    <rule ref="PSR2.Methods.FunctionCallSignature.ContentAfterOpenBracket">
+        <message>调用函数写成多行时，左括号必须放在行尾</message>
+    </rule>
+    <rule ref="PSR2.Methods.FunctionCallSignature.Indent">
+        <message>调用函数多行写法的缩进有误；期望有%1$d个空格实际上出现了%2$d</message>
+    </rule>
+    <rule ref="PSR2.Methods.FunctionCallSignature.CloseBracketLine">
+        <message>多行函数调用时右括号必须独占一行</message>
+    </rule>
+    <rule ref="Generic.PHP.LowerCaseConstant.Found">
+        <message>“true”、“false”和“null”必须小写；期望是“%1$s”实际上是“%2$s”</message>
+    </rule>
+    <rule ref="PSR2.Files.EndFileNewline.TooMany">
+        <message>文件结束后只能有1行空行，实际上出现了%1$d行</message>
+    </rule>
+    <rule ref="Internal.LineEndings.Mixed">
+        <message>文件有多种结尾方式，有可能导致不正确的结果</message>
+    </rule>
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.BraceIndent">
+        <message>左括号缩进有误；期望%1$d个空格实际出现%2$d个</message>
+    </rule>
+    <rule ref="Squiz.WhiteSpace.ScopeClosingBrace.Indent">
+        <message>右括号缩进有误；期望%1$d个空格实际出现%2$d个</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForLoopDeclaration.NoSpaceAfterFirst">
+        <message>在for表达式的第1个条件后需要有1个空格，实际找到%1$d个</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForLoopDeclaration.NoSpaceAfterSecond">
+        <message>在for表达式的第2个条件后需要有1个空格，实际找到%1$d个</message>
+    </rule>
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase">
+        <message>类的常量（const）定义必须全部是大写；期望是%1$s实际是%2$s</message>
+    </rule>
+    <rule ref="Squiz.Functions.FunctionDeclaration">
+        <message>期望是%1$s，实际却是“%2$s”</message>
+    </rule>
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction">
+        <message>在“function”关键词后期望有1个空格，实际找到%1$d个</message>
+    </rule>
+    <rule ref="PEAR.Functions.ValidDefaultValue.NotAtEnd">
+        <message>带有默认值的参数必须出现在参数的最后</message>
+    </rule>
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration.SpaceBeforeOpenParen">
+        <message>定义函数时左括号前不能有空格，实际找到%1$d个</message>
+    </rule>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing.SpacingAfterOpen">
+        <message>定义函数时左括号和参数“%2$s”间不能有空格，实际找到%1$d个</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingBeforeFirst">
+        <message>在for循环语句的第1个条件前不能有空格</message>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingBeforeSecond">
+        <message>在for循环语句的第2个条件前不能有空格</message>
+    </rule>
+    <rule ref="PSR2.Methods.FunctionCallSignature.MultipleArguments">
+        <message>多行方法调用时每行只允许1个参数</message>
+    </rule>
+</ruleset>

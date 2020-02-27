@@ -9,7 +9,6 @@
 
 namespace Phpple\GitWatcher\Tests\Watcher;
 
-
 use Phpple\GitWatcher\HookHandler;
 use PHPUnit\Framework\TestCase;
 
@@ -49,12 +48,27 @@ class WatcherLoaderTest extends TestCase
             'standard' => 'PSR2',
         ]);
         $this->assertFalse($loader->check());
+    }
 
+    public function testStandardWithIgnore()
+    {
         $loader = HookHandler::initWatcher(HookHandler::STANDARD, [
+            'target' => __DIR__.'/files/',
             'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
             'standard' => 'PSR2',
             'ignore' => 'badstandard.php'
         ]);
         $this->assertTrue($loader->check());
+    }
+
+    public function testStandardWithXml()
+    {
+        $loader = HookHandler::initWatcher(HookHandler::STANDARD, [
+            'target' => __DIR__,
+            'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
+            'standard' => SITE_ROOT . '/rules/phpdefault.xml',
+            's' => null,
+        ]);
+        $this->assertFalse($loader->check());
     }
 }
