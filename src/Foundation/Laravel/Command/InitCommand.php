@@ -48,7 +48,7 @@ class InitCommand extends Command
         //
         $basePath = base_path();
         if ( ! file_exists("${basePath}/gitwatcher.json")) {
-            if ( ! copy("${basePath}/vendor/phpple/gitwatcher/assert/gitwatcher.json", "${basePath}/gitwatcher.json")) {
+            if ( ! copy("${basePath}/vendor/phpple/gitwatcher/asset/gitwatcher.json", "${basePath}/gitwatcher.json")) {
                 echo 'Create config failed.Please create gitwatcher.json manually.';
 
                 return;
