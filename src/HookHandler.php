@@ -1,8 +1,8 @@
 <?php
 /**
- *
+ * Hook's Handler
  * @author: ronnie
- * @since: 2020/2/23 12:27 上午
+ * @since: 2020/2/23 12:27 am
  * @copyright: 2020@100tal.com
  * @filesource: HookHandler.phpp
  */
@@ -15,6 +15,7 @@ use Phpple\GitWatcher\Watcher\WatcherInterface;
 class HookHandler
 {
     private $dir;
+    private $confFile;
     private $confs = null;
 
     const FORBIDDEN_MERGE = 'forbidden_merge';
@@ -28,7 +29,6 @@ class HookHandler
         self::GIT_VERSION => [
             'version' => '2.0.0'
         ],
-        self::PHP_SYNTAX => [],
         self::FORBIDDEN_MERGE => [],
         self::STANDARD => [
             'standard' => 'PSR2',
@@ -45,6 +45,7 @@ class HookHandler
         if (!$confFile) {
             $confFile = realpath(dirname(__DIR__) . '/assets/' . self::DEFAULT_CONF_FILE);
         }
+        $this->confFile = $confFile;
 
         if (is_file($confFile)) {
             $content = file_get_contents($confFile);
@@ -53,11 +54,29 @@ class HookHandler
     }
 
     /**
-     * 载入loader
+     * Get project's root dir
+     * @return string
+     */
+    public function getRootDir()
+    {
+        return $this->dir;
+    }
+
+    /**
+     * Get config file's path
+     * @return false|string
+     */
+    public function getConfigFile()
+    {
+        return $this->confFile;
+    }
+
+    /**
+     * Init loader
      * @param string $name
      * @return WatcherInterface
      */
-    public static function initWatcher(string $name, array $conf)
+    public function initWatcher(string $name, array $conf)
     {
         $className = __NAMESPACE__ . "\\Watcher\\" . str_replace('_', '', ucwords($name, '_')) . 'Watcher';
         $watcher = new $className();
@@ -65,12 +84,12 @@ class HookHandler
             return null;
         }
 
-        $watcher->init($conf);
+        $watcher->init($conf, $this);
         return $watcher;
     }
 
     /**
-     * pre-commit对应的处理
+     * pre-commit associated operation
      * @return bool
      * @throws \Exception
      */
@@ -82,7 +101,7 @@ class HookHandler
         }
         foreach ($confs as $name => $conf) {
             chdir($this->dir);
-            $watcher = self::initWatcher($name, $conf);
+            $watcher = $this->initWatcher($name, $conf);
             if (!$watcher) {
                 ConsoleUtil::stderr('watcher not found:' . $name);
                 continue;

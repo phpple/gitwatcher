@@ -1,8 +1,8 @@
 <?php
 /**
- *
+ * Watcher for code's standard
  * @author: ronnie
- * @since: 2020/2/23 10:24 下午
+ * @since: 2020/2/23 10:24 pm
  * @copyright: 2020@100tal.com
  * @filesource: StandardWatcher.php
  */
@@ -10,10 +10,15 @@
 namespace Phpple\GitWatcher\Watcher;
 
 use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
+use Phpple\GitWatcher\HookHandler;
 
 class StandardWatcher implements WatcherInterface
 {
     private $conf = [];
+    /**
+     * @var HookHandler
+     */
+    private $handler;
     const DEFAULT_STANDARD = 'PSR2';
     const DEFAULT_PHPCS_PATH = './vendor/bin/phpcs';
     const KV_CONF_KEYS = [
@@ -42,31 +47,47 @@ class StandardWatcher implements WatcherInterface
     ];
 
     /**
-     * 配置项
-     * @param array $conf
-     * @return mixed
+     * @see WatcherInterface::init()
      */
-    public function init(array $conf)
+    public function init(array $conf, HookHandler $handler = null)
     {
+        $this->handler = $handler;
         $this->conf = $conf;
     }
 
     /**
-     * 检查是否通过
-     * @return bool
+     * @see WatcherInterface::check()
      */
     public function check(): bool
     {
+        $siteRoot = $this->handler->getRootDir();
+        $confFile = $this->handler->getConfigFile();
+        // handle phpcs
         $phpcsPath = $this->conf['phpcs'] ?? '';
         if ($phpcsPath) {
             if (substr($phpcsPath, 0, 1) != '/' && defined('SITE_ROOT')) {
-                $phpcsPath = SITE_ROOT . '/' . $phpcsPath;
+                $phpcsPath = $siteRoot . '/' . $phpcsPath;
             }
         } else {
             $phpcsPath = self::DEFAULT_PHPCS_PATH;
         }
         $phpcsPath = realpath($phpcsPath);
 
+        // handle standard
+        $standard = $this->conf['standard'] ?? '';
+        if ($standard && strtolower(pathinfo($standard, PATHINFO_EXTENSION)) == 'xml') {
+            if (realpath($standard) === false) {
+                $standard = realpath(dirname($confFile) . '/' . $standard);
+            } else {
+                $standard = realpath($standard);
+            }
+        }
+        if (!$standard) {
+            $standard = self::DEFAULT_STANDARD;
+        }
+        $this->conf['standard'] = $standard;
+
+        // init options
         $options = [];
         foreach (self::KV_CONF_KEYS as $key) {
             if (isset($this->conf[$key])) {
@@ -81,9 +102,6 @@ class StandardWatcher implements WatcherInterface
                     $options[$key] = sprintf('--%s', $key);
                 }
             }
-        }
-        if (!isset($options['standard'])) {
-            $options['standard'] = '--standard=' . self::DEFAULT_STANDARD;
         }
 
         $targetDir = $this->conf['target'] ?? './';

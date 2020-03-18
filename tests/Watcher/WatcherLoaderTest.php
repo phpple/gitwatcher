@@ -1,8 +1,8 @@
 <?php
 /**
- *
+ * Test for watcher loader
  * @author: ronnie
- * @since: 2020/2/23 9:26 下午
+ * @since: 2020/2/23 9:26 pm
  * @copyright: 2020@100tal.com
  * @filesource: WatcherLoaderTest.php
  */
@@ -16,34 +16,22 @@ class WatcherLoaderTest extends TestCase
 {
     public function testGitVersionLoader()
     {
-        $loader = HookHandler::initWatcher(HookHandler::GIT_VERSION, []);
+        $handler = new HookHandler(SITE_ROOT);
+        $loader = $handler->initWatcher(HookHandler::GIT_VERSION, []);
         $this->assertTrue($loader->check());
     }
 
     public function testPreCommit()
     {
-        $handler = new HookHandler(SITE_ROOT . '/src/', __DIR__ . '/files/rule.json');
+        $handler = new HookHandler(SITE_ROOT, __DIR__ . '/files/rule.json');
         $this->assertTrue($handler->preCommit());
-    }
-
-    public function testPhpSyntax()
-    {
-        $loader = HookHandler::initWatcher(HookHandler::PHP_SYNTAX, [
-            'dir' => __DIR__ . '/files/',
-        ]);
-        $this->assertFalse($loader->check());
-
-        $loader = HookHandler::initWatcher(HookHandler::PHP_SYNTAX, [
-            'dir' => __DIR__ . '/files/',
-            'exclude' => 'badsyntax'
-        ]);
-        $this->assertTrue($loader->check());
     }
 
     public function testStandard()
     {
-        chdir(__DIR__ . '/files/');
-        $loader = HookHandler::initWatcher(HookHandler::STANDARD, [
+        $handler = new HookHandler(__DIR__ . '/files/');
+        $loader = $handler->initWatcher(HookHandler::STANDARD, [
+            'target' => __DIR__.'/files/',
             'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
             'standard' => 'PSR2',
         ]);
@@ -52,7 +40,8 @@ class WatcherLoaderTest extends TestCase
 
     public function testStandardWithIgnore()
     {
-        $loader = HookHandler::initWatcher(HookHandler::STANDARD, [
+        $handler = new HookHandler(SITE_ROOT);
+        $loader = $handler->initWatcher(HookHandler::STANDARD, [
             'target' => __DIR__.'/files/',
             'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
             'standard' => 'PSR2',
@@ -63,10 +52,11 @@ class WatcherLoaderTest extends TestCase
 
     public function testStandardWithXml()
     {
-        $loader = HookHandler::initWatcher(HookHandler::STANDARD, [
+        $handler = new HookHandler(SITE_ROOT);
+        $loader = $handler->initWatcher(HookHandler::STANDARD, [
             'target' => __DIR__,
             'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
-            'standard' => SITE_ROOT . '/rules/phpdefault.xml',
+            'standard' => SITE_ROOT . '/assets/rules/phpdefault.xml',
             's' => null,
         ]);
         $this->assertFalse($loader->check());

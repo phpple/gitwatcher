@@ -1,13 +1,15 @@
 <?php
 /**
- *
+ * Watcher for checking the version of git
  * @author: ronnie
- * @since: 2020/2/23 12:35 上午
+ * @since: 2020/2/23 12:35 am
  * @copyright: 2020@100tal.com
  * @filesource: GitVersionWatcher.php
  */
 
 namespace Phpple\GitWatcher\Watcher;
+
+use Phpple\GitWatcher\HookHandler;
 
 class GitVersionWatcher implements WatcherInterface
 {
@@ -15,18 +17,15 @@ class GitVersionWatcher implements WatcherInterface
     const DEFAULT_MIN_VERSION = '2.0.0';
 
     /**
-     * 配置项
-     * @param array $conf
-     * @return mixed
+     * @see WatcherInterface::init()
      */
-    public function init(array $conf)
+    public function init(array $conf, HookHandler $handler = null)
     {
         $this->minVersion = $conf['version'] ?? self::DEFAULT_MIN_VERSION;
     }
 
     /**
-     * 检查是否通过
-     * @return bool
+     * @see WatcherInterface::check()
      */
     public function check(): bool
     {

@@ -1,8 +1,8 @@
 <?php
 /**
- *
+ * bootstrap for phpunit
  * @author: ronnie
- * @since: 2020/2/22 11:53 下午
+ * @since: 2020/2/22 11:53 pm
  * @copyright: 2020@100tal.com
  * @filesource: bootstrap.php
  */

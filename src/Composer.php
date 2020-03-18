@@ -1,8 +1,8 @@
 <?php
 /**
- *
+ * Composer's Event Handler
  * @author: ronnie
- * @since: 2020/3/5 5:35 下午
+ * @since: 2020/3/5 5:35 pm
  * @copyright: 2020@100tal.com
  * @filesource: Composer
  */

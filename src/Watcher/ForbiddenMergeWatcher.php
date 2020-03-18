@@ -1,29 +1,28 @@
 <?php
 /**
- *
+ * Watcher for forbidden merge
  * @author: ronnie
- * @since: 2020/2/22 9:51 上午
+ * @since: 2020/2/22 9:51 am
  * @copyright: 2020@100tal.com
  * @filesource: ForbiddenMergeWatcher.phpher.php
  */
 
 namespace Phpple\GitWatcher\Watcher;
 
+use Phpple\GitWatcher\HookHandler;
+
 class ForbiddenMergeWatcher implements WatcherInterface
 {
     /**
-     * 配置项
-     * @param array $conf
-     * @return mixed
+     * @see WatcherInterface::init()
      */
-    public function init(array $conf)
+    public function init(array $conf, HookHandler $handler = null)
     {
         // TODO: Implement init() method.
     }
 
     /**
-     * 检查是否通过
-     * @return bool
+     * @see WatcherInterface::check()
      */
     public function check(): bool
     {
