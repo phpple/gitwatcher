@@ -11,7 +11,7 @@ composer require phpple/gitwatcher --dev
 ```
 "scripts": {
     "post-autoload-dump": [
-      "Phpple\GitWatcher\Tool\Composer::phpostAutoloadDump"
+      "Phpple\\GitWatcher\\Composer::postAutoloadDump"
     ]
 }
 ```
