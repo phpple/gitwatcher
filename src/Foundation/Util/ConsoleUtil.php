@@ -17,7 +17,7 @@ class ConsoleUtil
      */
     public static function stdin(): string
     {
-        return fgets(STDIN);
+        return rtrim(fgets(STDIN), PHP_EOL);
     }
 
     /**

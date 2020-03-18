@@ -40,8 +40,12 @@ class HookHandler
         $this->dir = $dir;
 
         if (!$confFile) {
-            $confFile = $dir.'/'.self::DEFAULT_CONF_FILE;
+            $confFile = realpath($dir . '/' . self::DEFAULT_CONF_FILE);
         }
+        if (!$confFile) {
+            $confFile = realpath(dirname(__DIR__) . '/assets/' . self::DEFAULT_CONF_FILE);
+        }
+
         if (is_file($confFile)) {
             $content = file_get_contents($confFile);
             $this->confs = json_decode($content, true);
@@ -80,7 +84,7 @@ class HookHandler
             chdir($this->dir);
             $watcher = self::initWatcher($name, $conf);
             if (!$watcher) {
-                ConsoleUtil::stderr('watcher not found:'. $name);
+                ConsoleUtil::stderr('watcher not found:' . $name);
                 continue;
             }
             ConsoleUtil::stdout('-------watcher:' . $name . ' start ------');

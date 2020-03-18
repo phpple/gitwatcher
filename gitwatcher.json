@@ -1,0 +1,8 @@
+{
+  "standard": {
+    "phpcs": "vendor/bin/phpcs",
+    "target": "app/",
+    "standard": "vendor/phpple/gitwatcher/assets/rules/phpdefault.xml",
+    "s": null
+  }
+}

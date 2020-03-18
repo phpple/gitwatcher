@@ -1,0 +1,8 @@
+{
+  "standard": {
+    "phpcs": "vendor/bin/phpcs",
+    "target": "app/",
+    "standard": "rules/phpdefault.xml",
+    "s": null
+  }
+}
