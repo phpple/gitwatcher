@@ -1,6 +1,6 @@
 #! /usr/bin/php
 <?php
-$siteRoot = dirname(dirname(__DIR__)));
+$siteRoot = dirname(dirname(__DIR__));
 require $siteRoot.'/vendor/autoload.php';
 
 $handler = new Phpple\GitWatcher\HookHandler($siteRoot);
