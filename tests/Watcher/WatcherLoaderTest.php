@@ -14,19 +14,29 @@ use PHPUnit\Framework\TestCase;
 
 class WatcherLoaderTest extends TestCase
 {
-    public function testGitVersionLoader()
+    /**
+     * Test Git Version Watcher
+     */
+    public function testGitVersionWatcher()
     {
         $handler = new HookHandler(SITE_ROOT);
         $loader = $handler->initWatcher(HookHandler::GIT_VERSION, []);
         $this->assertTrue($loader->check());
     }
 
+    /**
+     * Test pre commit
+     * @throws \Exception
+     */
     public function testPreCommit()
     {
         $handler = new HookHandler(SITE_ROOT, __DIR__ . '/files/rule.json');
         $this->assertTrue($handler->preCommit());
     }
 
+    /**
+     * Test Standard Watcher
+     */
     public function testStandard()
     {
         $handler = new HookHandler(__DIR__ . '/files/');
@@ -38,6 +48,9 @@ class WatcherLoaderTest extends TestCase
         $this->assertFalse($loader->check());
     }
 
+    /**
+     * Test standard with ignore option
+     */
     public function testStandardWithIgnore()
     {
         $handler = new HookHandler(SITE_ROOT);
@@ -50,6 +63,9 @@ class WatcherLoaderTest extends TestCase
         $this->assertTrue($loader->check());
     }
 
+    /**
+     * Test Standard Watcher by xml config file
+     */
     public function testStandardWithXml()
     {
         $handler = new HookHandler(SITE_ROOT);
@@ -60,5 +76,27 @@ class WatcherLoaderTest extends TestCase
             's' => null,
         ]);
         $this->assertFalse($loader->check());
+    }
+
+    /**
+     * Test Commiter Watcher
+     */
+    public function testCommitterWatcher()
+    {
+        $originEmail = system('git config --get user.email');
+        $pos = strpos($originEmail, '@');
+        $originExt = substr($originEmail, $pos + 1);
+
+        $handler = new HookHandler(SITE_ROOT);
+        $loader = $handler->initWatcher(HookHandler::COMMITER, [
+            'email_extension' => $originExt,
+        ]);
+        $this->assertTrue($loader->check());
+
+        $randExt = uniqid().'.com';
+        $loader2 = $handler->initWatcher(HookHandler::COMMITER, [
+            'email_extension' => $randExt,
+        ]);
+        $this->assertFalse($loader2->check());
     }
 }

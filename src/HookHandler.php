@@ -20,14 +20,17 @@ class HookHandler
 
     const FORBIDDEN_MERGE = 'forbidden_merge';
     const GIT_VERSION = 'git_version';
-    const PHP_SYNTAX = 'php_syntax';
     const STANDARD = 'standard';
+    const COMMITER = 'committer';
 
     const DEFAULT_CONF_FILE = 'gitwatcher.json';
 
     const WATCHER_LIST = [
         self::GIT_VERSION => [
             'version' => '2.0.0'
+        ],
+        self::COMMITER => [
+            'email_extension' => ''
         ],
         self::FORBIDDEN_MERGE => [],
         self::STANDARD => [
