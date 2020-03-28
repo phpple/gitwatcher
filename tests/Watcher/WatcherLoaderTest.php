@@ -46,6 +46,14 @@ class WatcherLoaderTest extends TestCase
             'standard' => 'PSR2',
         ]);
         $this->assertFalse($loader->check());
+
+        $loader = $handler->initWatcher(HookHandler::STANDARD, [
+            'target' => __DIR__.'/files/',
+            'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
+            'standard' => 'PSR2',
+            'colors' => null,
+        ]);
+        $this->assertFalse($loader->check());
     }
 
     /**
