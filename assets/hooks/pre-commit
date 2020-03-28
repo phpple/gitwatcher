@@ -6,8 +6,8 @@ require $siteRoot.'/vendor/autoload.php';
 $handler = new Phpple\GitWatcher\HookHandler($siteRoot);
 $ret = $handler->preCommit();
 if (!$ret) {
-    echo '提交失败!'.PHP_EOL;
+    echo 'GitWatcher check failed!'.PHP_EOL;
     exit(1);
 } else {
-    echo '提交成功'.PHP_EOL;
+    echo 'GitWatcher check passed!'.PHP_EOL;
 }

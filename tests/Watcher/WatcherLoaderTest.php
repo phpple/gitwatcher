@@ -107,4 +107,19 @@ class WatcherLoaderTest extends TestCase
         ]);
         $this->assertFalse($loader2->check());
     }
+
+    public function testComposerWatcher()
+    {
+        $dirs = [
+            'notfound' => false,
+            'parse' => false,
+            'notconstant' => false,
+            'correct' => true,
+        ];
+        foreach($dirs as $dir => $expected) {
+            $handler = new HookHandler(__DIR__.'/composer/'.$dir);
+            $loader = $handler->initWatcher(HookHandler::COMPOSER, []);
+            $this->assertEquals($expected, $loader->check());
+        }
+    }
 }

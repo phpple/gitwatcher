@@ -28,4 +28,12 @@ class GitTest extends TestCase
         $this->assertEquals($expectBranch, GitUtil::getStandardBranch($branch));
         $this->assertEquals($expectBranch, GitUtil::getStandardBranch($expectBranch));
     }
+
+    public function testGetCurrentBranch()
+    {
+        $expect = 'master';
+        $expect = GitUtil::getStandardBranch($expect);
+        $branch = GitUtil::getCurrentBranch(SITE_ROOT);
+        $this->assertEquals($expect, $branch);
+    }
 }

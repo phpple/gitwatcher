@@ -22,6 +22,7 @@ class HookHandler
     const GIT_VERSION = 'git_version';
     const STANDARD = 'standard';
     const COMMITER = 'committer';
+    const COMPOSER = 'composer';
 
     const DEFAULT_CONF_FILE = 'gitwatcher.json';
 
@@ -36,6 +37,7 @@ class HookHandler
         self::STANDARD => [
             'standard' => 'PSR2',
         ],
+        self::COMMITER => [],
     ];
 
     public function __construct(string $dir, string $confFile = '')
@@ -111,7 +113,7 @@ class HookHandler
             }
             ConsoleUtil::stdout('-------watcher:' . $name . ' start ------');
             $ret = $watcher->check();
-            ConsoleUtil::stdout('-------watcher:' . $name . ' end ------');
+            ConsoleUtil::stdout('-------watcher:' . $name . ' end:' . ($ret ? 'true' : 'false') . ' ------');
             if ($ret === false) {
                 return false;
             }

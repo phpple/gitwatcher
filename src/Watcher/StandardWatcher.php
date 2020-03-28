@@ -105,7 +105,18 @@ class StandardWatcher implements WatcherInterface
         }
 
         $targetDir = $this->conf['target'] ?? './';
-        $targetDir = realpath($targetDir);
+        $targetDirs = array_map('trim', explode(',', $targetDir));
+        $dirs = [];
+        foreach ($targetDirs as $dir) {
+            $dir = realpath($dir);
+            if ($dir) {
+                $dirs[] = $dir;
+            }
+        }
+        if (empty($dirs)) {
+            ConsoleUtil::stderr('not target dir found');
+            return false;
+        }
 
         if (!$phpcsPath) {
             ConsoleUtil::stderr('phpcs not found:' . $phpcsPath);
@@ -115,7 +126,7 @@ class StandardWatcher implements WatcherInterface
             '%s %s %s',
             $phpcsPath,
             empty($options) ? '' : implode(' ', $options),
-            $targetDir
+            implode(' ', $dirs)
         );
         ConsoleUtil::stdout('cmd:' . $cmd);
         return !$this->execCommand($cmd, key_exists('colors', $this->conf));
@@ -126,7 +137,7 @@ class StandardWatcher implements WatcherInterface
      * @param string $cmd
      * @return bool
      */
-    private function execCommand(string $cmd, bool  $isColor): bool
+    private function execCommand(string $cmd, bool $isColor): bool
     {
         $haveErrors = false;
         $ph = popen($cmd, 'r');

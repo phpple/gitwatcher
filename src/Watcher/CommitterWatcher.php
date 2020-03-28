@@ -41,7 +41,7 @@ class CommitterWatcher implements WatcherInterface
      */
     public function check(): bool
     {
-        if (isset($this->conf[self::EMAIL_EXTENSION])) {
+        if (!empty($this->conf[self::EMAIL_EXTENSION])) {
             $ext = strtolower($this->conf[self::EMAIL_EXTENSION]);
             $ret = $this->checkEmailExtension($ext);
             switch ($ret) {

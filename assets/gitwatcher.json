@@ -2,8 +2,10 @@
   "git_version": {},
   "standard": {
     "phpcs": "vendor/bin/phpcs",
-    "target": "app/",
+    "target": "app/,src/",
     "standard": "rules/phpdefault.xml",
-    "s": null
-  }
+    "colors": null
+  },
+  "committer": {},
+  "composer": {}
 }
