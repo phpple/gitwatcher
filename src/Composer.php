@@ -34,7 +34,7 @@ class Composer
         }
         $originFile = dirname(__DIR__) . '/assets/hooks/pre-commit';
 
-        if (is_file($hookFile) && md5_file($hookFile) !== md5_file($originFile) && is_executable($hookFile)) {
+        if (is_file($hookFile) && (md5_file($hookFile) !== md5_file($originFile) || !is_executable($hookFile))) {
             ConsoleUtil::stdout('hook file existed, replace it? y/n');
             $result = ConsoleUtil::stdin();
             if ($result == 'y') {
