@@ -112,16 +112,38 @@ class StandardWatcher implements WatcherInterface
             return false;
         }
         $cmd = sprintf(
-            '%s %s --colors %s',
+            '%s %s %s',
             $phpcsPath,
             empty($options) ? '' : implode(' ', $options),
             $targetDir
         );
         ConsoleUtil::stdout('cmd:' . $cmd);
-        system($cmd, $code);
-        if ($code === 2) {
-            return false;
+        return !$this->execCommand($cmd, key_exists('colors', $this->conf));
+    }
+
+    /**
+     * execute command and return if found errors
+     * @param string $cmd
+     * @return bool
+     */
+    private function execCommand(string $cmd, bool  $isColor): bool
+    {
+        $haveErrors = false;
+        $ph = popen($cmd, 'r');
+        $prefix = 'FOUND ';
+        $prefixLen = strlen($prefix);
+        if ($isColor) {
+            $prefix = "\033[1mFOUND ";
+            $prefixLen = strlen($prefix);
         }
-        return true;
+        while (!feof($ph)) {
+            $line = fgets($ph);
+            if (!$haveErrors && strncmp($line, $prefix, $prefixLen) === 0 && $line[$prefixLen] !== '0') {
+                $haveErrors = true;
+            }
+            fputs(STDOUT, $line);
+        }
+        fclose($ph);
+        return $haveErrors;
     }
 }
