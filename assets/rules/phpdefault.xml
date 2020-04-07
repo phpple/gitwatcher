@@ -16,9 +16,6 @@
     <rule ref="Squiz.NamingConventions.ValidVariableName.MemberNotCamelCaps">
         <message>成员“%1$s”不符合驼峰命名规则</message>
     </rule>
-    <rule ref="Squiz.NamingConventions.ValidVariableName.NotCamelCaps">
-        <message>变量“%1$s”不符合驼峰命名规则</message>
-    </rule>
     <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
         <message>每个类必须定义一个命名空间</message>
     </rule>
