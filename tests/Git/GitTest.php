@@ -14,13 +14,6 @@ use PHPUnit\Framework\TestCase;
 
 class GitTest extends TestCase
 {
-    public function testCommitContain()
-    {
-        $dir = REPO_ROOT;
-        $ret = GitUtil::isBasedOnCommit($dir, 'f8c9e44', '9f110fa');
-        $this->assertTrue($ret);
-    }
-
     public function testGetBranch()
     {
         $branch = 'foo';

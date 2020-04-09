@@ -10,6 +10,10 @@
 namespace Phpple\GitWatcher\Tests\Watcher;
 
 use Phpple\GitWatcher\HookHandler;
+use Phpple\GitWatcher\Watcher\CommitterWatcher;
+use Phpple\GitWatcher\Watcher\ComposerWatcher;
+use Phpple\GitWatcher\Watcher\GitVersionWatcher;
+use Phpple\GitWatcher\Watcher\StandardWatcher;
 use PHPUnit\Framework\TestCase;
 
 class WatcherLoaderTest extends TestCase
@@ -20,7 +24,7 @@ class WatcherLoaderTest extends TestCase
     public function testGitVersionWatcher()
     {
         $handler = new HookHandler(SITE_ROOT);
-        $loader = $handler->initWatcher(HookHandler::GIT_VERSION, []);
+        $loader = $handler->initWatcher(GitVersionWatcher::class, []);
         $this->assertTrue($loader->check());
     }
 
@@ -32,6 +36,10 @@ class WatcherLoaderTest extends TestCase
     {
         $handler = new HookHandler(SITE_ROOT, __DIR__ . '/files/rule.json');
         $this->assertTrue($handler->preCommit());
+
+        $handler = new HookHandler(SITE_ROOT, __DIR__ . '/files/extendrule.json');
+        $confs = $handler->getConfs();
+        $this->assertFalse($confs['standard']['options']['colors']);
     }
 
     /**
@@ -40,18 +48,22 @@ class WatcherLoaderTest extends TestCase
     public function testStandard()
     {
         $handler = new HookHandler(__DIR__ . '/files/');
-        $loader = $handler->initWatcher(HookHandler::STANDARD, [
-            'target' => __DIR__.'/files/',
+        $loader = $handler->initWatcher(StandardWatcher::class, [
+            'target' => __DIR__ . '/files/',
             'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
-            'standard' => 'PSR2',
+            'options' => [
+                'standard' => 'PSR2',
+            ]
         ]);
         $this->assertFalse($loader->check());
 
-        $loader = $handler->initWatcher(HookHandler::STANDARD, [
-            'target' => __DIR__.'/files/',
+        $loader = $handler->initWatcher(StandardWatcher::class, [
+            'target' => __DIR__ . '/files/',
             'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
-            'standard' => 'PSR2',
-            'colors' => null,
+            'options' => [
+                'standard' => 'PSR2',
+                'colors' => null,
+            ]
         ]);
         $this->assertFalse($loader->check());
     }
@@ -62,11 +74,13 @@ class WatcherLoaderTest extends TestCase
     public function testStandardWithIgnore()
     {
         $handler = new HookHandler(SITE_ROOT);
-        $loader = $handler->initWatcher(HookHandler::STANDARD, [
-            'target' => __DIR__.'/files/',
+        $loader = $handler->initWatcher(StandardWatcher::class, [
+            'target' => __DIR__ . '/files/',
             'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
-            'standard' => 'PSR2',
-            'ignore' => 'badstandard.php'
+            'options' => [
+                'standard' => 'PSR2',
+                'ignore' => 'badstandard.php'
+            ]
         ]);
         $this->assertTrue($loader->check());
     }
@@ -77,11 +91,13 @@ class WatcherLoaderTest extends TestCase
     public function testStandardWithXml()
     {
         $handler = new HookHandler(SITE_ROOT);
-        $loader = $handler->initWatcher(HookHandler::STANDARD, [
+        $loader = $handler->initWatcher(StandardWatcher::class, [
             'target' => __DIR__,
             'phpcs' => SITE_ROOT . '/vendor/bin/phpcs',
-            'standard' => SITE_ROOT . '/assets/rules/phpdefault.xml',
-            's' => null,
+            'options' => [
+                'standard' => SITE_ROOT . '/assets/rules/phpdefault.xml',
+                's' => null,
+            ]
         ]);
         $this->assertFalse($loader->check());
     }
@@ -96,13 +112,13 @@ class WatcherLoaderTest extends TestCase
         $originExt = substr($originEmail, $pos + 1);
 
         $handler = new HookHandler(SITE_ROOT);
-        $loader = $handler->initWatcher(HookHandler::COMMITER, [
+        $loader = $handler->initWatcher(CommitterWatcher::class, [
             'email_extension' => $originExt,
         ]);
         $this->assertTrue($loader->check());
 
-        $randExt = uniqid().'.com';
-        $loader2 = $handler->initWatcher(HookHandler::COMMITER, [
+        $randExt = uniqid() . '.com';
+        $loader2 = $handler->initWatcher(CommitterWatcher::class, [
             'email_extension' => $randExt,
         ]);
         $this->assertFalse($loader2->check());
@@ -116,9 +132,9 @@ class WatcherLoaderTest extends TestCase
             'notconstant' => false,
             'correct' => true,
         ];
-        foreach($dirs as $dir => $expected) {
-            $handler = new HookHandler(__DIR__.'/composer/'.$dir);
-            $loader = $handler->initWatcher(HookHandler::COMPOSER, []);
+        foreach ($dirs as $dir => $expected) {
+            $handler = new HookHandler(__DIR__ . '/composer/' . $dir);
+            $loader = $handler->initWatcher(ComposerWatcher::class, []);
             $this->assertEquals($expected, $loader->check());
         }
     }

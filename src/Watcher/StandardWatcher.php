@@ -11,6 +11,7 @@ namespace Phpple\GitWatcher\Watcher;
 
 use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
 use Phpple\GitWatcher\HookHandler;
+use Phpple\GitWatcher\WatcherInterface;
 
 class StandardWatcher implements WatcherInterface
 {
@@ -45,6 +46,8 @@ class StandardWatcher implements WatcherInterface
         'vv',
         'vvv',
     ];
+    const STANDARD_KEY = 'standard';
+    const PROJECT_ROOT_VAR = '{$project.root}';
 
     /**
      * @see WatcherInterface::init()
@@ -61,7 +64,6 @@ class StandardWatcher implements WatcherInterface
     public function check(): bool
     {
         $siteRoot = $this->handler->getRootDir();
-        $confFile = $this->handler->getConfigFile();
         // handle phpcs
         $phpcsPath = $this->conf['phpcs'] ?? '';
         if ($phpcsPath) {
@@ -73,36 +75,7 @@ class StandardWatcher implements WatcherInterface
         }
         $phpcsPath = realpath($phpcsPath);
 
-        // handle standard
-        $standard = $this->conf['standard'] ?? '';
-        if ($standard && strtolower(pathinfo($standard, PATHINFO_EXTENSION)) == 'xml') {
-            if (realpath($standard) === false) {
-                $standard = realpath(dirname($confFile) . '/' . $standard);
-            } else {
-                $standard = realpath($standard);
-            }
-        }
-        if (!$standard) {
-            $standard = self::DEFAULT_STANDARD;
-        }
-        $this->conf['standard'] = $standard;
-
-        // init options
-        $options = [];
-        foreach (self::KV_CONF_KEYS as $key) {
-            if (isset($this->conf[$key])) {
-                $options[$key] = sprintf('--%s="%s"', $key, $this->conf[$key]);
-            }
-        }
-        foreach (self::K_CONF_KEYS as $key) {
-            if (key_exists($key, $this->conf)) {
-                if (strlen($key) == 1 || $key == 'vv' || $key == 'vvv') {
-                    $options[$key] = sprintf('-%s', $key);
-                } else {
-                    $options[$key] = sprintf('--%s', $key);
-                }
-            }
-        }
+        $options = $this->getOptions();
 
         $targetDir = $this->conf['target'] ?? './';
         $targetDirs = array_map('trim', explode(',', $targetDir));
@@ -129,7 +102,44 @@ class StandardWatcher implements WatcherInterface
             implode(' ', $dirs)
         );
         ConsoleUtil::stdout('cmd:' . $cmd);
-        return !$this->execCommand($cmd, key_exists('colors', $this->conf));
+        return !$this->execCommand($cmd, key_exists('colors', $options));
+    }
+
+    /**
+     * Get options of phpcs
+     * @return array
+     */
+    private function getOptions()
+    {
+        $rawOptions = $this->conf['options'] ?? [];
+        // handle standard
+        $standard = $rawOptions[self::STANDARD_KEY] ?? '';
+        if ($standard && strtolower(pathinfo($standard, PATHINFO_EXTENSION)) == 'xml') {
+            $standard = str_replace(self::PROJECT_ROOT_VAR, $this->handler->getRootDir(), $standard);
+            $standard = realpath($standard);
+        }
+        if (!$standard) {
+            $standard = self::DEFAULT_STANDARD;
+        }
+        $rawOptions[self::STANDARD_KEY] = $standard;
+
+        // init options
+        foreach (self::KV_CONF_KEYS as $key) {
+            if (isset($rawOptions[$key])) {
+                $options[$key] = sprintf('--%s="%s"', $key, $rawOptions[$key]);
+            }
+        }
+        foreach (self::K_CONF_KEYS as $key) {
+            if (!key_exists($key, $rawOptions) || $rawOptions[$key] !== true) {
+                continue;
+            }
+            if (strlen($key) == 1 || $key == 'vv' || $key == 'vvv') {
+                $options[$key] = sprintf('-%s', $key);
+            } else {
+                $options[$key] = sprintf('--%s', $key);
+            }
+        }
+        return $options;
     }
 
     /**

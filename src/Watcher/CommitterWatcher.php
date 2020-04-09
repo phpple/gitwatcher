@@ -11,6 +11,7 @@ namespace Phpple\GitWatcher\Watcher;
 
 use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
 use Phpple\GitWatcher\HookHandler;
+use Phpple\GitWatcher\WatcherInterface;
 
 class CommitterWatcher implements WatcherInterface
 {

@@ -7,9 +7,7 @@
  * @filesource: WatcherInterface.php
  */
 
-namespace Phpple\GitWatcher\Watcher;
-
-use Phpple\GitWatcher\HookHandler;
+namespace Phpple\GitWatcher;
 
 interface WatcherInterface
 {
@@ -22,7 +20,7 @@ interface WatcherInterface
     public function init(array $conf, HookHandler $handler = null);
 
     /**
-     * check if pass the examine
+     * Check if pass the examine
      * @return bool
      */
     public function check(): bool;

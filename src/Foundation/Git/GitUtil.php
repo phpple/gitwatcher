@@ -17,7 +17,7 @@ class GitUtil
     const ZERO_COMMIT = '0000000000000000000000000000000000000000';
 
     /**
-     * 是否基于某个基准提交
+     * Is based on the base commit
      * @param $dir
      * @param $baseCommit
      * @param $compareCommit
@@ -37,8 +37,6 @@ class GitUtil
      */
     public static function getCommitsFromStdin(): HookCommits
     {
-        $commits = array();
-
         $hookCommits = new HookCommits();
         while (!feof(STDIN)) {
             $line = trim(fgets(STDIN));
@@ -64,6 +62,21 @@ class GitUtil
             return $branch;
         }
         return self::BRANCH_PREFIX . $branch;
+    }
+
+    /**
+     * 获取当前分支
+     * @param string $dir
+     * @return string
+     */
+    public static function getCurrentBranch(string $dir): string
+    {
+        chdir($dir);
+        $file = realpath($dir . '/.git/HEAD');
+        if (!$file) {
+            return '';
+        }
+        return trim(explode(': ', file_get_contents($file), 2)[1]);
     }
 
     /**

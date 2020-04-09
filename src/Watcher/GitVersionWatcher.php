@@ -10,6 +10,7 @@
 namespace Phpple\GitWatcher\Watcher;
 
 use Phpple\GitWatcher\HookHandler;
+use Phpple\GitWatcher\WatcherInterface;
 
 class GitVersionWatcher implements WatcherInterface
 {

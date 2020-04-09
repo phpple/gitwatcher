@@ -10,52 +10,68 @@
 namespace Phpple\GitWatcher;
 
 use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
-use Phpple\GitWatcher\Watcher\WatcherInterface;
 
 class HookHandler
 {
     private $dir;
     private $confFile;
-    private $confs = null;
+    private $confs = [];
 
-    const FORBIDDEN_MERGE = 'forbidden_merge';
-    const GIT_VERSION = 'git_version';
-    const STANDARD = 'standard';
-    const COMMITER = 'committer';
-    const COMPOSER = 'composer';
+    const EXTEND_KEY = '@extend';
 
     const DEFAULT_CONF_FILE = 'gitwatcher.json';
-
-    const WATCHER_LIST = [
-        self::GIT_VERSION => [
-            'version' => '2.0.0'
-        ],
-        self::COMMITER => [
-            'email_extension' => ''
-        ],
-        self::FORBIDDEN_MERGE => [],
-        self::STANDARD => [
-            'standard' => 'PSR2',
-        ],
-        self::COMMITER => [],
-    ];
 
     public function __construct(string $dir, string $confFile = '')
     {
         $this->dir = $dir;
 
         if (!$confFile) {
-            $confFile = realpath($dir . '/' . self::DEFAULT_CONF_FILE);
+            $confFile = realpath($dir . DIRECTORY_SEPARATOR . self::DEFAULT_CONF_FILE);
         }
         if (!$confFile) {
-            $confFile = realpath(dirname(__DIR__) . '/assets/' . self::DEFAULT_CONF_FILE);
+            $confFile = realpath(dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . self::DEFAULT_CONF_FILE);
         }
         $this->confFile = $confFile;
 
         if (is_file($confFile)) {
             $content = file_get_contents($confFile);
-            $this->confs = json_decode($content, true);
+            $confs = json_decode($content, true);
+
+            $this->loadExtend($confs);
+
+            $this->confs = $confs;
+            foreach ($this->confs as $key => $val) {
+                if ($key[0] == '@') {
+                    unset($this->confs[$key]);
+                }
+            }
         }
+    }
+
+    /**
+     * Load extend file
+     * @param $confs
+     */
+    private function loadExtend(&$confs)
+    {
+        if (empty($confs[self::EXTEND_KEY])) {
+            return;
+        }
+
+        $extendVal = $confs[self::EXTEND_KEY];
+        if ($extendVal === 'default') {
+            $extendVal = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . self::DEFAULT_CONF_FILE;
+        }
+
+        $extend = realpath($extendVal);
+        if (!is_file($extend)) {
+            $extend = realpath(dirname($this->confFile) . DIRECTORY_SEPARATOR . $extendVal);
+        }
+        if (!is_file($extend)) {
+            return;
+        }
+        $subConfs = json_decode(file_get_contents($extend), true);
+        $confs = array_replace_recursive($subConfs, $confs);
     }
 
     /**
@@ -78,12 +94,11 @@ class HookHandler
 
     /**
      * Init loader
-     * @param string $name
+     * @param string $className
      * @return WatcherInterface
      */
-    public function initWatcher(string $name, array $conf)
+    public function initWatcher(string $className, array $conf)
     {
-        $className = __NAMESPACE__ . "\\Watcher\\" . str_replace('_', '', ucwords($name, '_')) . 'Watcher';
         $watcher = new $className();
         if (!($watcher instanceof WatcherInterface)) {
             return null;
@@ -100,13 +115,13 @@ class HookHandler
      */
     public function preCommit(): bool
     {
-        $confs = self::WATCHER_LIST;
-        if ($this->confs !== null) {
-            $confs = $this->confs;
-        }
-        foreach ($confs as $name => $conf) {
+        foreach ($this->confs as $name => $conf) {
             chdir($this->dir);
-            $watcher = $this->initWatcher($name, $conf);
+            $className = __NAMESPACE__ . "\\Watcher\\" . str_replace('_', '', ucwords($name, '_')) . 'Watcher';
+            if (!class_exists($className) || $conf === false) {
+                continue;
+            }
+            $watcher = $this->initWatcher($className, $conf);
             if (!$watcher) {
                 ConsoleUtil::stderr('watcher not found:' . $name);
                 continue;
@@ -119,5 +134,14 @@ class HookHandler
             }
         }
         return true;
+    }
+
+    /**
+     * 获取所有配置
+     * @return array
+     */
+    public function getConfs()
+    {
+        return $this->confs;
     }
 }

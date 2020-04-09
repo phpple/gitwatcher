@@ -2,7 +2,9 @@
   "git_version": {},
   "standard": {
     "target":"src",
-    "standard":"psr2",
-    "s": null
+    "options": {
+      "standard":"psr2",
+      "s": true
+    }
   }
 }
