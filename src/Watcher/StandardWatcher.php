@@ -9,6 +9,7 @@
 
 namespace Phpple\GitWatcher\Watcher;
 
+use Phpple\GitWatcher\Foundation\Git\GitUtil;
 use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
 use Phpple\GitWatcher\HookHandler;
 use Phpple\GitWatcher\WatcherInterface;
@@ -47,7 +48,11 @@ class StandardWatcher implements WatcherInterface
         'vvv',
     ];
     const STANDARD_KEY = 'standard';
+    const MODE_KEY = 'mode';
     const PROJECT_ROOT_VAR = '{$project.root}';
+
+    const MODE_ALL = 'all';
+    const MODE_ONLY_UPDATE = 'update';
 
     /**
      * @see WatcherInterface::init()
@@ -74,35 +79,65 @@ class StandardWatcher implements WatcherInterface
             $phpcsPath = self::DEFAULT_PHPCS_PATH;
         }
         $phpcsPath = realpath($phpcsPath);
-
-        $options = $this->getOptions();
-
-        $targetDir = $this->conf['target'] ?? './';
-        $targetDirs = array_map('trim', explode(',', $targetDir));
-        $dirs = [];
-        foreach ($targetDirs as $dir) {
-            $dir = realpath($dir);
-            if ($dir) {
-                $dirs[] = $dir;
-            }
-        }
-        if (empty($dirs)) {
-            ConsoleUtil::stderr('not target dir found');
-            return false;
-        }
-
         if (!$phpcsPath) {
             ConsoleUtil::stderr('phpcs not found:' . $phpcsPath);
             return false;
         }
+
+        $files = $this->getFiles();
+        if (empty($files)) {
+            ConsoleUtil::stderr('no need to check files');
+            return true;
+        }
+
+        $options = $this->getOptions();
+
         $cmd = sprintf(
             '%s %s %s',
             $phpcsPath,
             empty($options) ? '' : implode(' ', $options),
-            implode(' ', $dirs)
+            implode(' ', $files)
         );
         ConsoleUtil::stdout('cmd:' . $cmd);
         return !$this->execCommand($cmd, key_exists('colors', $options));
+    }
+
+    private function getFiles()
+    {
+        $targetDir = $this->conf['target'] ?? './';
+        $targetDirs = array_map(function ($item) {
+            return trim($item, '\s\/');
+        }, explode(',', $targetDir));
+        $dirs = [];
+        foreach ($targetDirs as $dir) {
+            $realDir = realpath($dir);
+            if ($realDir) {
+                $dirs[] = $dir.'/';
+            }
+        }
+        if (empty($dirs)) {
+            return [];
+        }
+
+        // Need to check updated files if mode is `update`
+        $mode = $this->conf[self::MODE_KEY] ?? self::MODE_ALL;
+        if ($mode === self::MODE_ALL) {
+            return $dirs;
+        }
+
+        $files = GitUtil::getUpdatedFiles($this->handler->getRootDir());
+        $results = [];
+        foreach ($dirs as $dir) {
+            $len = strlen($dir);
+            foreach ($files as $key => $file) {
+                if (strncmp($file, $dir, $len) === 0) {
+                    $results[] = $file;
+                    unset($files[$key]);
+                }
+            }
+        }
+
+        return $results;
     }
 
     /**

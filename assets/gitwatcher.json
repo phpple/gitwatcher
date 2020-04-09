@@ -5,7 +5,7 @@
   "standard": {
     "phpcs": "vendor/bin/phpcs",
     "target": "app/,src/",
-    "mode": "all",
+    "mode": "update",
     "options": {
       "standard": "{$project.root}assets/rules/phpdefault.xml",
       "colors": true,

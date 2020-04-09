@@ -13,7 +13,7 @@ class GitUtil
 {
     const BRANCH_PREFIX = 'refs/heads/';
     const TAG_PREFIX = 'refs/tags/';
-    // 空提交
+    // empty commit
     const ZERO_COMMIT = '0000000000000000000000000000000000000000';
 
     /**
@@ -32,7 +32,7 @@ class GitUtil
     }
 
     /**
-     * 从标准输入获取提交
+     * Get commits from standard input
      * @return HookCommits
      */
     public static function getCommitsFromStdin(): HookCommits
@@ -50,7 +50,7 @@ class GitUtil
 
 
     /**
-     * 获取标准的分支名称
+     * Get standard branch name
      * @param $branch
      * @return string
      */
@@ -65,7 +65,7 @@ class GitUtil
     }
 
     /**
-     * 获取当前分支
+     * Get current branch
      * @param string $dir
      * @return string
      */
@@ -80,7 +80,7 @@ class GitUtil
     }
 
     /**
-     * 获取去掉前缀的分支
+     * Get branch name without prefix
      * @param $branch
      * @return mixed
      */
@@ -90,7 +90,7 @@ class GitUtil
     }
 
     /**
-     * 获取标准的标签名称
+     * Get standard tag name
      * @param $tag
      * @return string
      */
@@ -104,7 +104,7 @@ class GitUtil
 
 
     /**
-     * 获取去掉前缀的标签
+     * Get tag name without prefix
      * @param $tag
      * @return mixed
      */
@@ -114,7 +114,7 @@ class GitUtil
     }
 
     /**
-     * 将git的路径调整为标准的路径
+     * Get standard path
      * @param $path
      * @return string
      */
@@ -132,8 +132,8 @@ class GitUtil
     }
 
     /**
-     * 将文件大小已智能化方式显示
-     * @param int $size 字节
+     * Get smart file size
+     * @param int $size unit:Bytes
      * @return string
      */
     public static function getSmartSize(int $size): string
@@ -149,8 +149,8 @@ class GitUtil
     }
 
     /**
-     * 获取原始文件
-     * @param string $hash 文件HASH
+     * Get raw file
+     * @param string $hash file's hash
      * @return string
      */
     public static function getRawFile(string $hash): string
@@ -159,7 +159,23 @@ class GitUtil
     }
 
     /**
-     * 获取两个版本的文件变化
+     * Get updated files
+     * @param string $dir
+     * @return array
+     */
+    public static function getUpdatedFiles(string $dir): array
+    {
+        chdir($dir);
+        $cmd = 'git diff --cached --name-only';
+        exec($cmd, $outputs, $code);
+        if ($code !== 0) {
+            return [];
+        }
+        return $outputs;
+    }
+
+    /**
+     * Get files's differents betwwen two versions
      * @param string $oldrev
      * @param string $newrev
      * @return array
@@ -194,7 +210,7 @@ class GitUtil
     }
 
     /**
-     * 是否为初始提交
+     * Is the first commit
      * @param $commit
      * @return bool
      */

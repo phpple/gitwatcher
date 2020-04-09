@@ -92,7 +92,9 @@ Check the validity of your code by phpcs.
 
 * `phpcs`: where the phpcs bin file is
 * `target`: the dir will be checked by phpcs
-* `mode`: `all` checked all the files in `target`
+* `mode`: [all|update] 
+    * `all`:check all the files in `target`
+    * `update`:only check update files in `target`
 * `options`: the options of phpcs
     * `standard`: `{$project.root}` refer to the root dir of gitwatcher.
     * `colors`: print texts with color
