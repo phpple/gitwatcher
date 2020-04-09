@@ -15,5 +15,11 @@
   "committer": {
     "mail_extension": ""
   },
-  "composer": {}
+  "composer": {},
+  "branch": {
+    "rebase": {
+      "compare": "master",
+      "excludes": "dev,test,demo,master"
+    }
+  }
 }

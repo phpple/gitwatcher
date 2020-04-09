@@ -9,6 +9,8 @@
 
 namespace Phpple\GitWatcher\Foundation\Git;
 
+use Phpple\GitWatcher\Foundation\Util\ConsoleUtil;
+
 class GitUtil
 {
     const BRANCH_PREFIX = 'refs/heads/';
@@ -26,9 +28,13 @@ class GitUtil
     public static function isBasedOnCommit(string $dir, string $baseCommit, string $compareCommit): bool
     {
         chdir($dir);
-        $cmd = sprintf('git log %s --format="%s" | grep "%s" ', $baseCommit, '%H', $compareCommit);
+        $cmd = sprintf('git merge-base %s %s', $baseCommit, $compareCommit);
+        ConsoleUtil::stdout($cmd);
         exec($cmd, $lines, $code);
-        return !empty($lines);
+        if ($code === 0) {
+            return $lines[0] == $compareCommit;
+        }
+        return false;
     }
 
     /**
@@ -77,6 +83,35 @@ class GitUtil
             return '';
         }
         return trim(explode(': ', file_get_contents($file), 2)[1]);
+    }
+
+    /**
+     * Get commit by branch
+     * @param string $dir
+     * @param string $branch
+     * @param bool $local
+     * @return string
+     */
+    public static function getBranchCommit(string $dir, string $branch, bool $local = true): string
+    {
+        chdir($dir);
+        if ($local) {
+            $cmd = "git show-ref --heads ${branch}|awk '{print $1}'";
+            ConsoleUtil::stdout($cmd);
+            exec($cmd, $outputs, $code);
+            if ($code === 0) {
+                return trim($outputs[0]);
+            }
+            return false;
+        }
+
+        $cmd = "cat .git/FETCH_HEAD |grep \"branch 'master'\"|awk '{print $1}'";
+        ConsoleUtil::stdout($cmd);
+        exec($cmd, $outputs, $code);
+        if ($code === 0) {
+            return trim($outputs[0]);
+        }
+        return false;
     }
 
     /**
