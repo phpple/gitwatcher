@@ -112,7 +112,7 @@ class StandardWatcher implements WatcherInterface
         foreach ($targetDirs as $dir) {
             $realDir = realpath($dir);
             if ($realDir) {
-                $dirs[] = $dir.'/';
+                $dirs[] = $dir . '/';
             }
         }
         if (empty($dirs)) {
@@ -150,7 +150,7 @@ class StandardWatcher implements WatcherInterface
         // handle standard
         $standard = $rawOptions[self::STANDARD_KEY] ?? '';
         if ($standard && strtolower(pathinfo($standard, PATHINFO_EXTENSION)) == 'xml') {
-            $standard = str_replace(self::PROJECT_ROOT_VAR, $this->handler->getRootDir(), $standard);
+            $standard = str_replace(self::PROJECT_ROOT_VAR, dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR, $standard);
             $standard = realpath($standard);
         }
         if (!$standard) {
