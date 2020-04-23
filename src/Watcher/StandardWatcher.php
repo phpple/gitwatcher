@@ -80,13 +80,13 @@ class StandardWatcher implements WatcherInterface
         }
         $phpcsPath = realpath($phpcsPath);
         if (!$phpcsPath) {
-            ConsoleUtil::stderr('phpcs not found:' . $phpcsPath);
+            ConsoleUtil::error('phpcs not found:' . $phpcsPath);
             return false;
         }
 
         $files = $this->getFiles();
         if (empty($files)) {
-            ConsoleUtil::stderr('no need to check files');
+            ConsoleUtil::success('no need to check files');
             return true;
         }
 
@@ -98,7 +98,7 @@ class StandardWatcher implements WatcherInterface
             empty($options) ? '' : implode(' ', $options),
             implode(' ', $files)
         );
-        ConsoleUtil::stdout('cmd:' . $cmd);
+        ConsoleUtil::notice('cmd:' . $cmd);
         return !$this->execCommand($cmd, key_exists('colors', $options));
     }
 
@@ -106,7 +106,7 @@ class StandardWatcher implements WatcherInterface
     {
         $targetDir = $this->conf['target'] ?? './';
         $targetDirs = array_map(function ($item) {
-            return trim($item, '\s\/');
+            return rtrim($item, " \/");
         }, explode(',', $targetDir));
         $dirs = [];
         foreach ($targetDirs as $dir) {

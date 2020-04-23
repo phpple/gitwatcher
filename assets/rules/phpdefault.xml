@@ -40,7 +40,7 @@
     </rule>
 
     <rule ref="PSR2.Namespaces.NamespaceDeclaration.BlankLineAfter">
-        <message>命名空间生命后必须有且仅有1行空白行</message>
+        <message>命名空间声名后必须有且仅有1行空白行</message>
     </rule>
     <rule ref="PSR2.Classes.ClassDeclaration.OpenBraceNewLine">
         <message>类的开始花括号必须在类定义的下一行</message>

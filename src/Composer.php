@@ -17,15 +17,23 @@ class Composer
     const DEFAULT_CONFIG_FILE = 'gitwatcher.json';
 
     /**
+     * Get base dir of project
+     * @param Event $evt
+     * @return string
+     */
+    private static function getBaseDir(Event $evt)
+    {
+        return dirname($evt->getComposer()->getConfig()->get('vendor-dir'));
+    }
+
+    /**
      * When autoload dump executed
      * @param Event $evt
      */
     public static function postAutoloadDump(Event $evt)
     {
-        // vendor dir
-        $vendorDir = $evt->getComposer()->getConfig()->get('vendor-dir');
         // base dir
-        $baseDir = dirname($vendorDir);
+        $baseDir = self::getBaseDir($evt);
         // hook file path
         $hookFile = $baseDir . '/.git/hooks/pre-commit';
         // copy hook file
@@ -35,7 +43,7 @@ class Composer
         $originFile = dirname(__DIR__) . '/assets/hooks/pre-commit';
 
         if (is_file($hookFile) && (md5_file($hookFile) !== md5_file($originFile) || !is_executable($hookFile))) {
-            ConsoleUtil::stdout('hook file existed, replace it? y/n');
+            ConsoleUtil::notice('hook file existed, replace it? y/n');
             $result = ConsoleUtil::stdin();
             if ($result == 'y') {
                 unlink($hookFile);
@@ -48,5 +56,24 @@ class Composer
             copy($originFile, $hookFile);
             chmod($hookFile, 0755);
         }
+    }
+
+    /**
+     * Composer script manual check
+     * @param Event $evt
+     * @throws \Exception
+     */
+    public static function manualCheck(Event $evt)
+    {
+        $siteRoot = self::getBaseDir($evt);
+
+        $handler = new HookHandler($siteRoot);
+        $ret = $handler->preCommit();
+        ConsoleUtil::stdout(PHP_EOL);
+        if (!$ret) {
+            ConsoleUtil::error('GitWatcher check failed!');
+            exit(1);
+        }
+        ConsoleUtil::success('GitWatcher check passed!');
     }
 }

@@ -126,9 +126,9 @@ class HookHandler
                 ConsoleUtil::stderr('watcher not found:' . $name);
                 continue;
             }
-            ConsoleUtil::stdout('-------watcher:' . $name . ' start ------');
+            ConsoleUtil::notice('-------watcher:' . $name . ' start ------');
             $ret = $watcher->check();
-            ConsoleUtil::stdout('-------watcher:' . $name . ' end:' . ($ret ? 'true' : 'false') . ' ------');
+            ConsoleUtil::notice('-------watcher:' . $name . ' end:' . ($ret ? 'true' : 'false') . ' ------');
             if ($ret === false) {
                 return false;
             }

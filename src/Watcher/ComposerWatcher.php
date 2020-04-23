@@ -48,21 +48,21 @@ class ComposerWatcher implements WatcherInterface
     {
         $path = realpath($this->composerFile);
         if (!$path) {
-            ConsoleUtil::stderr('composer file not found:' . $this->composerFile);
+            ConsoleUtil::error('composer file not found:' . $this->composerFile);
             return false;
         }
 
         $configs = json_decode(file_get_contents($path), true);
         $error = json_last_error();
         if ($error !== JSON_ERROR_NONE) {
-            ConsoleUtil::stderr('composer file parse failed:' . $error);
+            ConsoleUtil::error('composer file parse failed:' . $error);
             return false;
         }
 
         // exclude some requires
         $requires = $configs['require'] ?? [];
         if (!is_array($requires)) {
-            ConsoleUtil::stderr('composer file require is illegal');
+            ConsoleUtil::error('composer file require is illegal');
             return false;
         }
 
@@ -74,7 +74,7 @@ class ComposerWatcher implements WatcherInterface
 
             if (!preg_match(self::VERSION_REGEXP, $val)) {
                 $passed = false;
-                ConsoleUtil::stderr(sprintf('[%s]: %s is not a constant', $key, $val));
+                ConsoleUtil::error(sprintf('[%s]: %s is not a constant', $key, $val));
             }
         }
         return $passed;

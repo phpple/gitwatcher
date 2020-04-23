@@ -45,14 +45,16 @@ class BranchWatcher implements WatcherInterface
      */
     public function check(): bool
     {
-        ConsoleUtil::stdout('git fetch');
+        ConsoleUtil::notice('git fetch');
         system('git fetch', $var);
         if ($var !== 0) {
-            ConsoleUtil::stderr('fetch failed');
+            ConsoleUtil::warn('fetch failed, continue? [n|y]');
+            if (ConsoleUtil::stdin() == 'y') {
+                return true;
+            }
             return false;
         }
         if (isset($this->conf['rebase']) && !$this->checkRebase($this->conf['rebase'])) {
-
             return false;
         }
         return true;
@@ -73,7 +75,7 @@ class BranchWatcher implements WatcherInterface
             $excludes = array_map('trim', explode(',', $excludes));
         }
         if ($excludes && in_array($currentBranch, $excludes)) {
-            ConsoleUtil::stderr('current branch ignored');
+            ConsoleUtil::error('current branch ignored');
             return true;
         }
 
@@ -81,8 +83,8 @@ class BranchWatcher implements WatcherInterface
         $compareCommit = GitUtil::getBranchCommit($this->rootDir, $compareBranch, false);
         $ret = GitUtil::isBasedOnCommit($this->rootDir, $currentBranch, $compareCommit);
         if (!$ret) {
-            ConsoleUtil::stderr('current branch is not based on ' . $compareBranch . PHP_EOL);
-            ConsoleUtil::stdout('you should execute command: ' . PHP_EOL . 'git rebase ' . $compareCommit . PHP_EOL);
+            ConsoleUtil::error('current branch is not based on ' . $compareBranch . PHP_EOL);
+            ConsoleUtil::error('you should execute command: ' . PHP_EOL . 'git rebase ' . $compareCommit . PHP_EOL);
         }
         return $ret;
     }

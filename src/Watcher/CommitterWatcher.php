@@ -49,10 +49,10 @@ class CommitterWatcher implements WatcherInterface
                 case self::RET_SUCCUSS:
                     return true;
                 case self::RET_FAILURE:
-                    ConsoleUtil::stderr('Email\'s extension not match ' . $ext);
+                    ConsoleUtil::error('Email\'s extension not match ' . $ext);
                     return false;
                 case self::RET_NOT_EMAIL:
-                    ConsoleUtil::stderr('Email is not found from your configure.');
+                    ConsoleUtil::error('Email is not found from your configure.');
                     return false;
             }
         }
