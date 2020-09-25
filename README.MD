@@ -103,7 +103,7 @@ Check the validity of your code by phpcs.
 
 ## Custom configure
 
-If your want to custom the configure, you can add a file(`gitwatch.json`) in your site root dir. such as
+If your want to custom the configure, you can add a file(`gitwatcher.json`) in your site root dir. such as
 ```json
 {
   "@extend": "default",
