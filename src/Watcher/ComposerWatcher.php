@@ -27,7 +27,7 @@ class ComposerWatcher implements WatcherInterface
         'php',
     ];
 
-    const VERSION_REGEXP = '#^\d+(\.\d+)*$#';
+    const VERSION_REGEXP = '#^[^\*~><=\^]+$#';
 
     /**
      * Initialize the watcher
@@ -72,11 +72,21 @@ class ComposerWatcher implements WatcherInterface
                 continue;
             }
 
-            if (!preg_match(self::VERSION_REGEXP, $val)) {
+            if (!self::isConstVersion($val)) {
                 $passed = false;
-                ConsoleUtil::error(sprintf('[%s]: %s is not a constant', $key, $val));
+                ConsoleUtil::error(sprintf('[%s]: %s is not a constant version', $key, $val));
             }
         }
         return $passed;
+    }
+
+    /**
+     * 是否为常量的版本
+     * @param $version
+     * @return false|int
+     */
+    public static function isConstVersion($version)
+    {
+        return !!preg_match(self::VERSION_REGEXP, $version);
     }
 }

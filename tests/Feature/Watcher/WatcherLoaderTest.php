@@ -7,7 +7,7 @@
  * @filesource: WatcherLoaderTest.php
  */
 
-namespace Phpple\GitWatcher\Tests\Watcher;
+namespace Phpple\GitWatcher\Tests\Feature\Watcher;
 
 use Phpple\GitWatcher\HookHandler;
 use Phpple\GitWatcher\Watcher\CommitterWatcher;

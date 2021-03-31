@@ -1,5 +1,4 @@
-vendor/
-*.lock
 .idea/
+composer.lock
+vendor/
 coverage/
-example/

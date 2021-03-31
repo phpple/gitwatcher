@@ -7,7 +7,7 @@
  * @filesource: CommitTest.php
  */
 
-namespace Phpple\GitWatcher\Watcher\Tests\Git;
+namespace Phpple\GitWatcher\Watcher\Tests\Unit\Git;
 
 use Phpple\GitWatcher\Foundation\Git\GitUtil;
 use PHPUnit\Framework\TestCase;
