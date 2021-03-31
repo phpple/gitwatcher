@@ -38,12 +38,18 @@ class Composer
         $hookFile = $baseDir . '/.git/hooks/pre-commit';
         // copy hook file
         if (!is_dir(dirname($hookFile))) {
-            return;
+            ConsoleUtil::notice('Project not inited by git, init it? y/n');
+            $result = ConsoleUtil::stdin();
+            if ($result == 'y') {
+                system('git init');
+            } else {
+                return;
+            }
         }
         $originFile = dirname(__DIR__) . '/assets/hooks/pre-commit';
 
         if (is_file($hookFile) && (md5_file($hookFile) !== md5_file($originFile) || !is_executable($hookFile))) {
-            ConsoleUtil::notice('hook file existed, replace it? y/n');
+            ConsoleUtil::notice('Hook file existed, replace it? y/n');
             $result = ConsoleUtil::stdin();
             if ($result == 'y') {
                 unlink($hookFile);
@@ -51,7 +57,7 @@ class Composer
         }
 
         if (!is_file($hookFile)) {
-            echo 'copy file assets/hooks/pre-commit' . PHP_EOL;
+            echo 'Copy file assets/hooks/pre-commit' . PHP_EOL;
 
             copy($originFile, $hookFile);
             chmod($hookFile, 0755);
