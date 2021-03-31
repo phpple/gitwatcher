@@ -27,7 +27,7 @@ class ComposerWatcher implements WatcherInterface
         'php',
     ];
 
-    const VERSION_REGEXP = '#^[^\*~><=\^]+$#';
+    const VERSION_REGEXP = '#^[^\*~><=\^\|\s]+$#';
 
     /**
      * Initialize the watcher

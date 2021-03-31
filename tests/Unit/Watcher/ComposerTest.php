@@ -24,6 +24,7 @@ class ComposerTest extends TestCase
             '1.3.*',
             '>1.3.0',
             '<=34.3',
+            '1.3.2 | 1.4.3',
         ];
 
         foreach($illegalVersions as $version) {
